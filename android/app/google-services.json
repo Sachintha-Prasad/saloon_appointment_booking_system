@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "256920318665",
+    "project_id": "saloon-blue-f7c93",
+    "storage_bucket": "saloon-blue-f7c93.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256920318665:android:93c358c4bd668e57261318",
+        "android_client_info": {
+          "package_name": "com.example.saloon_ap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcDhZ2QTit0OtnayqbvI52btZ3K98sPwU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256920318665:android:5e7f54b519e81f74261318",
+        "android_client_info": {
+          "package_name": "com.example.saloon_appointment_booking_system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcDhZ2QTit0OtnayqbvI52btZ3K98sPwU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

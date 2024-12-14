@@ -1,7 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:saloon_appointment_booking_system/home_page.dart';
+import 'package:saloon_appointment_booking_system/features/home/home_page.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -9,7 +9,7 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
-      duration: 1000,
+      duration: 2000,
       splash: Center(
         child: Lottie.asset(
           'assets/animations/splash_animation.json',
@@ -22,11 +22,4 @@ class SplashScreen extends StatelessWidget {
       splashTransition: SplashTransition.fadeTransition,
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: SplashScreen(),
-  ));
 }
