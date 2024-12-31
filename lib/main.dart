@@ -1,14 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'core/constants.dart';
-import 'firebase/firebase_options.dart';
-import 'core/router.dart';
+import 'package:get/get.dart';
+import 'package:saloon_appointment_booking_system/features/auth/auth_repository/auth_repository.dart';
+import 'package:saloon_appointment_booking_system/firebase/firebase_options.dart';
+import 'package:saloon_appointment_booking_system/utils/theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,)
+      .then((value) => Get.put(AuthRepository()));
   runApp(const MyApp());
 }
 
@@ -17,14 +17,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      onGenerateRoute: AppRouter.generateRoute,
-      initialRoute: splashRoute,
+
+      // theme modes
+      themeMode: ThemeMode.system,
+      theme: SBAppTheme.lightTheme,
+      darkTheme: SBAppTheme.darkTheme,
+
+      // transitions
+      defaultTransition: Transition.rightToLeftWithFade,
+      transitionDuration: const Duration(milliseconds: 200),
+
+      // routes
+      home: const CircularProgressIndicator(),
     );
   }
 }

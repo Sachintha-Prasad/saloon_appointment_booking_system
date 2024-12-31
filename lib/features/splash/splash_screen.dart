@@ -1,7 +1,9 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:saloon_appointment_booking_system/features/home/home_page.dart';
+import 'package:saloon_appointment_booking_system/features/auth/screens/onboarding/onboarding_screen.dart';
+import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
+import 'package:saloon_appointment_booking_system/utils/constants/image_strings.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -12,13 +14,13 @@ class SplashScreen extends StatelessWidget {
       duration: 2000,
       splash: Center(
         child: Lottie.asset(
-          'assets/animations/splash_animation.json',
+          SBImages.splashAnimation,
           fit: BoxFit.cover,
         ),
       ),
-      nextScreen: const HomePage(),
+      nextScreen: const OnboardingScreen(),
       splashIconSize: double.infinity,
-      backgroundColor: const Color(0xFF0083ac),
+      backgroundColor: SBColors.primary,
       splashTransition: SplashTransition.fadeTransition,
     );
   }
