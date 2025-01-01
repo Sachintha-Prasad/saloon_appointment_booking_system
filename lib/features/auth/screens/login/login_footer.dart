@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:saloon_appointment_booking_system/common/widgets/custom_text_button.dart';
 import 'package:saloon_appointment_booking_system/features/auth/screens/register/register_screen.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/enum.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/image_strings.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
-import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
 
 class LogInFooter extends StatelessWidget {
   const LogInFooter({

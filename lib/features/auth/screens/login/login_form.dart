@@ -32,7 +32,7 @@ class LogInForm extends StatelessWidget {
                   hintText: "Email",
                   obscureText: false,
                   controller: logInController.email,
-                  prefixIcon: Icons.email,
+                  prefixIcon: Icons.email_outlined,
                 ),
                 const SizedBox(height: SBSizes.spaceBtwInputFields),
 
@@ -41,7 +41,7 @@ class LogInForm extends StatelessWidget {
                   hintText: "Password",
                   obscureText: true,
                   controller: logInController.password,
-                  prefixIcon: Icons.lock,
+                  prefixIcon: Icons.lock_outlined,
                 ),
                 const SizedBox(height: SBSizes.spaceBtwInputFields),
 
