@@ -31,7 +31,7 @@ class RegisterForm extends StatelessWidget {
                   hintText: "Name",
                   controller: registerController.name,
                   obscureText: false,
-                  prefixIcon: Icons.person,
+                  prefixIcon: Icons.person_outline,
                 ),
                 const SizedBox(height: SBSizes.spaceBtwInputFields),
 
@@ -40,7 +40,7 @@ class RegisterForm extends StatelessWidget {
                   hintText: "Email",
                   controller: registerController.email,
                   obscureText: false,
-                  prefixIcon: Icons.email,
+                  prefixIcon: Icons.email_outlined,
                 ),
                 const SizedBox(height: SBSizes.spaceBtwInputFields),
 
@@ -49,7 +49,7 @@ class RegisterForm extends StatelessWidget {
                   hintText: "Mobile number",
                   controller: registerController.mobileNo,
                   obscureText: false,
-                  prefixIcon: Icons.phone,
+                  prefixIcon: Icons.phone_outlined,
                 ),
                 const SizedBox(height: SBSizes.spaceBtwInputFields),
 
@@ -58,7 +58,7 @@ class RegisterForm extends StatelessWidget {
                   hintText: "Password",
                   controller: registerController.password,
                   obscureText: true,
-                  prefixIcon: Icons.lock,
+                  prefixIcon: Icons.lock_outlined,
                 ),
                 const SizedBox(height: SBSizes.spaceBtwInputFields),
               ],
