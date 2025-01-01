@@ -46,4 +46,9 @@ class SBSizes {
 
   // app bar height
   static const double appBarHeight = 56.0;
+
+  // avatar sizes
+  static const double avatarWidth = 120.0;
+  static const double avatarHeight = 120.0;
+  static const double avatarRadius = 120.0;
 }

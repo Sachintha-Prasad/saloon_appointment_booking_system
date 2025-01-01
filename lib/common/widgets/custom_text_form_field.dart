@@ -105,7 +105,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         suffixIcon: widget.obscureText
             ? IconButton(
           icon: Icon(
-            isObscured ? Icons.visibility_off : Icons.visibility,
+            isObscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
             color: isObscured ? SBColors.grey : SBColors.primary,
             size: SBSizes.iconMd,
           ),

@@ -10,4 +10,7 @@ class SBImages {
 
   // icons
   static String googleIcon = 'assets/icons/google_icon.svg';
+
+  // sample avatar image --> this will be replace with actual user image
+  static String avatarImg = 'assets/images/avatar.png';
 }

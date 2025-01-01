@@ -31,11 +31,7 @@ class UserDashboard extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              CustomTextButton(btnText: "Profile", btnType: ButtonType.secondary, onPressed: ()=>Get.to(UserProfile()),),
-
-              const SizedBox(height: 16),
-
-              CustomTextButton(btnText: "Log Out", onPressed: ()=> {AuthRepository.instance.logOut()},)
+              CustomTextButton(btnText: "Profile", onPressed: ()=>Get.to(const UserProfile()),),
             ],
           ),
         ),
