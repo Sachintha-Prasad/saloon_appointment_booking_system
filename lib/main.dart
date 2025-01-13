@@ -1,14 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'package:saloon_appointment_booking_system/features/auth/auth_repository/auth_repository.dart';
-import 'package:saloon_appointment_booking_system/firebase/firebase_options.dart';
+import 'package:saloon_appointment_booking_system/repositories/auth_repository/auth_repository.dart';
+import 'firebase/firebase_options.dart';
 import 'package:saloon_appointment_booking_system/utils/theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,)
       .then((value) => Get.put(AuthRepository()));
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 

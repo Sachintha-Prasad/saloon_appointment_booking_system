@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/theme/custom_themes/app_bar_theme.dart';
+import 'package:saloon_appointment_booking_system/utils/theme/custom_themes/progress_indicator_theme.dart';
 import 'package:saloon_appointment_booking_system/utils/theme/custom_themes/text_selection_theme.dart';
 import 'package:saloon_appointment_booking_system/utils/theme/custom_themes/text_theme.dart';
 
@@ -15,7 +16,8 @@ class SBAppTheme {
       scaffoldBackgroundColor: SBColors.bgLight,
       appBarTheme: SBAppBarTheme.appBarThemeLight,
       textTheme: SBTextTheme.lightTextTheme,
-      textSelectionTheme: SBTextSelectionTheme.textSelectionThemeData
+      textSelectionTheme: SBTextSelectionTheme.textSelectionThemeData,
+      progressIndicatorTheme: SBProgressIndicatorTheme.progressIndicatorThemeData
   );
 
 
@@ -27,6 +29,7 @@ class SBAppTheme {
       scaffoldBackgroundColor: SBColors.bgDark,
       appBarTheme: SBAppBarTheme.appBarThemeDark,
       textTheme: SBTextTheme.darkTextTheme,
-      textSelectionTheme: SBTextSelectionTheme.textSelectionThemeData
+      textSelectionTheme: SBTextSelectionTheme.textSelectionThemeData,
+      progressIndicatorTheme: SBProgressIndicatorTheme.progressIndicatorThemeData
   );
 }

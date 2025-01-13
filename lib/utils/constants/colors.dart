@@ -6,13 +6,13 @@ class SBColors {
   // primary colors
   static const Color primary = Color(0xFF0083ac);
   static const Color red = Color(0xFFED4C5C);
+  static const Color green = Color(0xFF089d37);
 
   // neutral colors
   static const Color white = Colors.white;
   static const Color lightGrey = Color(0xFFF5F5F5);
   static const Color grey = Color(0xFFBDBDBD);
   static const Color darkGrey = Color(0xFF757575);
-
 
   // bg colors
   static const Color bgLight = Colors.white;
@@ -35,6 +35,9 @@ class SBColors {
   static const Color inputPlaceholderLight = Color(0xFFBDBDBD);
   static const Color inputPlaceholderDark = Color(0xFF757575);
 
-  // Error Colors
+  // success colors
+  static const Color successColor = Color(0xFF089d37);
+
+  // error colors
   static const Color errorColor = Color(0xFFB00020);
 }
