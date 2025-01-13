@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart';
+import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
+import 'package:saloon_appointment_booking_system/common/widgets/custom_text_button.dart';
+import 'package:saloon_appointment_booking_system/controllers/user_controller.dart';
+import 'package:saloon_appointment_booking_system/models/user_model.dart';
+import 'package:saloon_appointment_booking_system/screens/user_profile/profile/user_profile_screen.dart';
+import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
+
+class StylistDashboard extends StatelessWidget {
+  const StylistDashboard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final userController = Get.put(UserController());
+
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: SBSpacingStyle.paddingMainLayout,
+          child: FutureBuilder(
+              future: userController.getUserData(),
+              builder: (context, snapshot){
+                if(snapshot.connectionState == ConnectionState.done){
+                  if(snapshot.hasData){
+                    UserModel userData = snapshot.data as UserModel;
+
+                    return  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Hello Stylist ${SBHelperFunctions.getFirstName(userData.name!)},",
+                          style: Theme.of(context).textTheme.headlineLarge,
+                        ),
+                        const SizedBox(height: 8),
+
+                        Text(
+                          'Find the service you want, and treat yourself',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        const SizedBox(height: 16),
+
+                        CustomTextButton(btnText: "Profile", onPressed: ()=>Get.to(const UserProfileScreen()),),
+                      ],
+                    );
+                  } else if(snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  } else {
+                    return const Center(child: Text("Something went wrong"));
+                  }
+
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              }),
+        ),
+      ),
+    );
+  }
+}
