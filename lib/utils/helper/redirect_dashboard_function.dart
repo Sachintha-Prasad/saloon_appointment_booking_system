@@ -3,32 +3,34 @@ import 'package:saloon_appointment_booking_system/screens/admin/admin_dashboard.
 import 'package:saloon_appointment_booking_system/screens/client/client_dashboard.dart';
 import 'package:saloon_appointment_booking_system/screens/stylist/stylist_dashboard.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/enum.dart';
+import 'package:get/get.dart';
 
 class SBRedirectToDashboard {
   SBRedirectToDashboard._();
 
   static Roles getRoleFromString(String role) {
     switch (role) {
-      case 'client':
+      case 'CLIENT':
         return Roles.CLIENT;
-      case 'stylist':
+      case 'STYLIST':
         return Roles.STYLIST;
-      case 'admin':
+      case 'ADMIN':
         return Roles.ADMIN;
       default:
         throw Exception("Unknown role: $role");
     }
   }
 
-  static getDashboardBasedOnRole(Roles role) {
+  static void getDashboardBasedOnRole(Roles role) {
+    // Navigate based on the role
     if (role == Roles.CLIENT) {
-      return const ClientDashboard();
+      Get.offAll(() => const ClientDashboard());
     } else if (role == Roles.STYLIST) {
-      return const StylistDashboard();
+      Get.offAll(() => const StylistDashboard());
     } else if (role == Roles.ADMIN) {
-      return const AdminDashboard();
+      Get.offAll(() => const AdminDashboard());
     } else {
-      return const OnboardingScreen();
+      Get.offAll(() => const OnboardingScreen());
     }
   }
 }

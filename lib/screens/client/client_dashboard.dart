@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
 import 'package:saloon_appointment_booking_system/common/widgets/custom_text_button.dart';
 import 'package:saloon_appointment_booking_system/controllers/user_controller.dart';
@@ -20,7 +19,7 @@ class ClientDashboard extends StatelessWidget {
         child: Padding(
           padding: SBSpacingStyle.paddingMainLayout,
           child: FutureBuilder(
-            future: userController.getUserData(),
+            future: userController.fetchUserData(),
             builder: (context, snapshot){
               if(snapshot.connectionState == ConnectionState.done){
                 if(snapshot.hasData){
@@ -30,7 +29,7 @@ class ClientDashboard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Hello Client ${SBHelperFunctions.getFirstName(userData.name!)},",
+                        "Hello Client ${SBHelperFunctions.getFirstName(userData.name)},",
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       const SizedBox(height: 8),

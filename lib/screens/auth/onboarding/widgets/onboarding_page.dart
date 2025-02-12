@@ -12,14 +12,14 @@ class OnboardingPage extends StatelessWidget {
   final VoidCallback onLoginPressed;
 
   const OnboardingPage({
-    Key? key,
+    super.key,
     required this.img,
     required this.title,
     required this.subtitle,
     required this.buttonText,
     required this.onButtonPressed,
     required this.onLoginPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

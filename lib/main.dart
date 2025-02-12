@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/repositories/auth_repository/auth_repository.dart';
+import 'package:saloon_appointment_booking_system/screens/splash/splash_screen.dart';
 import 'firebase/firebase_options.dart';
 import 'package:saloon_appointment_booking_system/utils/theme/theme.dart';
 
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
       transitionDuration: const Duration(milliseconds: 200),
 
       // routes
-      home: const CircularProgressIndicator(),
+      home: const SplashScreen(),
     );
   }
 }
