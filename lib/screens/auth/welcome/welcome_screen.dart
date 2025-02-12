@@ -28,14 +28,14 @@ class WelcomeScreen extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
 
-                  SizedBox(height: SBSizes.defaultSpace),
+                  const SizedBox(height: SBSizes.defaultSpace),
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(child: CustomTextButton(btnType: ButtonType.bordered, btnText: "Log In", onPressed: ()=> {Get.to(LogInScreen())},)),
-                      SizedBox(width: SBSizes.md),
-                      Expanded(child: CustomTextButton(btnText: "Register", onPressed: ()=> {Get.to(RegisterScreen())},)),
+                      Expanded(child: CustomTextButton(btnType: ButtonType.bordered, btnText: "Log In", onPressed: ()=> {Get.to(const LogInScreen())},)),
+                      const SizedBox(width: SBSizes.md),
+                      Expanded(child: CustomTextButton(btnText: "Register", onPressed: ()=> {Get.to(const RegisterScreen())},)),
                     ],
                   )
 

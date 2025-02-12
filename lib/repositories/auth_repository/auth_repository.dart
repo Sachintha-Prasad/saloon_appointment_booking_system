@@ -27,6 +27,8 @@ class AuthRepository extends GetxController {
 
   // redirect the user to the dashboard according to their roles
   _setInitialScreen(User? user) async {
+    print("currently logged user: $user");
+
     if (user == null) {
       Get.offAll(() => const OnboardingScreen());
     } else {

@@ -16,7 +16,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-
   @override
   Widget build(BuildContext context) {
     final isDark = SBHelperFunctions.isDarkMode(context);
@@ -28,7 +27,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             children: [
               // header=======================================================================================
-              AuthHeader(authHeaderData: registerHeaderData,),
+              AuthHeader(
+                authHeaderData: registerHeaderData,
+              ),
               const SizedBox(height: SBSizes.spaceBtwSections),
 
               Column(
@@ -42,7 +43,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   const SizedBox(height: SBSizes.md),
 
                   // footer section===============================================================================
-                  RegisterFooter(),
+                  const RegisterFooter(),
                 ],
               ),
             ],
@@ -52,7 +53,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
-
-
-
-

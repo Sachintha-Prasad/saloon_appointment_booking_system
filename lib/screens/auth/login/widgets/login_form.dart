@@ -15,10 +15,14 @@ class LogInForm extends StatelessWidget {
   Widget build(BuildContext context) {
     // logIn controller
     final logInController = Get.put(LogInController());
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
+
+    // textfields controllers to get data from textfields
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
 
     return Form(
-      key: _formKey,
+      key: formKey,
       child: SizedBox(
         height: 400.0,
         child: Column(
@@ -31,7 +35,7 @@ class LogInForm extends StatelessWidget {
                 CustomTextFormField(
                   hintText: "Email",
                   obscureText: false,
-                  controller: logInController.email,
+                  controller: emailController,
                   prefixIcon: Icons.email_outlined,
                 ),
                 const SizedBox(height: SBSizes.spaceBtwInputFields),
@@ -40,7 +44,7 @@ class LogInForm extends StatelessWidget {
                 CustomTextFormField(
                   hintText: "Password",
                   obscureText: true,
-                  controller: logInController.password,
+                  controller: passwordController,
                   prefixIcon: Icons.lock_outlined,
                 ),
                 const SizedBox(height: SBSizes.spaceBtwInputFields),
@@ -62,10 +66,10 @@ class LogInForm extends StatelessWidget {
                 CustomTextButton(
                     btnText: 'Log In',
                     onPressed: () => {
-                      if(_formKey.currentState!.validate()){
-                        LogInController.instance.logInUser(
-                          logInController.email.text.trim(),
-                          logInController.password.text.trim()
+                      if(formKey.currentState!.validate()){
+                        logInController.logInUser(
+                          emailController.text.trim(),
+                          passwordController.text.trim()
                         )
                       }
                     },

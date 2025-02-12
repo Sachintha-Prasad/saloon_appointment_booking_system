@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:saloon_appointment_booking_system/controllers/logout_controller.dart';
 import 'package:saloon_appointment_booking_system/controllers/user_controller.dart';
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
-import 'package:saloon_appointment_booking_system/repositories/auth_repository/auth_repository.dart';
 import 'package:saloon_appointment_booking_system/screens/user_profile/profile/widgets/user_profile_image.dart';
 import 'package:saloon_appointment_booking_system/screens/user_profile/profile/widgets/user_profile_menu.dart';
 import 'package:saloon_appointment_booking_system/screens/user_profile/profile/widgets/user_profile_menu_item.dart';
@@ -16,6 +16,7 @@ class UserProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userController = Get.put(UserController());
+    final logoutController = Get.put(LogoutController());
     final isDark = SBHelperFunctions.isDarkMode(context);
 
     return Scaffold(
@@ -39,7 +40,7 @@ class UserProfileScreen extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(SBSizes.defaultSpace),
           child: FutureBuilder(
-            future: userController.getUserData(),
+            future: userController.fetchUserData(),
             builder: (context, snapshot){
               if(snapshot.connectionState == ConnectionState.done){
                 if(snapshot.hasData){
@@ -85,7 +86,7 @@ class UserProfileScreen extends StatelessWidget {
                         prefixIconColor: SBColors.red,
                         isTrailingIconVisible: false,
                         textColor: SBColors.red,
-                        onTap: () => AuthRepository.instance.logOut(),
+                        onTap: () => logoutController.logoutUser(),
                       ),
                     ],
                   );

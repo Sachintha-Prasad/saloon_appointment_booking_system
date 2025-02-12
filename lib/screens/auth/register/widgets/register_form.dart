@@ -16,10 +16,16 @@ class RegisterForm extends StatelessWidget {
   Widget build(BuildContext context) {
     // register controller
     final registerController = Get.put(RegisterController());
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
+
+    // textfields controllers to get data from textfields
+    final emailController = TextEditingController();
+    final passwordController = TextEditingController();
+    final nameController = TextEditingController();
+    final mobileNoController = TextEditingController();
 
     return Form(
-      key: _formKey,
+      key: formKey,
       child: SizedBox(
         height: 400.0,
         child: Column(
@@ -31,7 +37,7 @@ class RegisterForm extends StatelessWidget {
                 // name
                 CustomTextFormField(
                   hintText: "Name",
-                  controller: registerController.name,
+                  controller: nameController,
                   obscureText: false,
                   prefixIcon: Icons.person_outline,
                 ),
@@ -40,7 +46,7 @@ class RegisterForm extends StatelessWidget {
                 // email
                 CustomTextFormField(
                   hintText: "Email",
-                  controller: registerController.email,
+                  controller: emailController,
                   obscureText: false,
                   prefixIcon: Icons.email_outlined,
                 ),
@@ -49,7 +55,7 @@ class RegisterForm extends StatelessWidget {
                 // mobile number
                 CustomTextFormField(
                   hintText: "Mobile number",
-                  controller: registerController.mobileNo,
+                  controller: mobileNoController,
                   obscureText: false,
                   prefixIcon: Icons.phone_outlined,
                 ),
@@ -58,7 +64,7 @@ class RegisterForm extends StatelessWidget {
                 // password
                 CustomTextFormField(
                   hintText: "Password",
-                  controller: registerController.password,
+                  controller: passwordController,
                   obscureText: true,
                   prefixIcon: Icons.lock_outlined,
                 ),
@@ -74,14 +80,15 @@ class RegisterForm extends StatelessWidget {
                   btnText: 'Join Now',
                   onPressed: () {
                     final user = UserModel(
-                        email: registerController.email.text.trim(),
-                        password: registerController.password.text.trim(),
-                        name: registerController.name.text.trim(),
-                        mobileNo: registerController.mobileNo.text.trim(),
+                        email: emailController.text.trim(),
+                        name: nameController.text.trim(),
+                        mobileNo: mobileNoController.text.trim(),
                         role: Roles.CLIENT,
                     );
 
-                    RegisterController.instance.registerUser(user);
+                    final password =  passwordController.text.trim();
+
+                    registerController.registerUser(user, password);
                   },
                 ),
               ],

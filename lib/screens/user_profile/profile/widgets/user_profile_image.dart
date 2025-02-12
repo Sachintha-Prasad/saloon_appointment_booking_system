@@ -6,7 +6,7 @@ import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
 import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
 
-class UserProfileImage extends StatelessWidget {
+class UserProfileImage extends StatefulWidget {
   const UserProfileImage({
     super.key,
     required this.userData,
@@ -15,57 +15,61 @@ class UserProfileImage extends StatelessWidget {
   final UserModel userData;
 
   @override
+  _UserProfileImageState createState() => _UserProfileImageState();
+}
+
+class _UserProfileImageState extends State<UserProfileImage> {
+  late String? profileImg;
+
+  @override
+  void initState() {
+    super.initState();
+    profileImg = widget.userData.profileImg;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
         // Navigate to EditProfilePictureScreen and wait for it to return
-        await Get.to(() => EditProfilePictureScreen());
-        // Trigger UI update after returning (if any changes were made)
-        userData.profileImg;
+        final updatedImage = await Get.to(() => const EditProfilePictureScreen());
+
+        // Update profile image if changed
+        if (updatedImage != null && updatedImage is String) {
+          setState(() {
+            profileImg = updatedImage;
+          });
+        }
       },
       child: SizedBox(
         width: SBSizes.avatarWidth,
         height: SBSizes.avatarHeight,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(SBSizes.avatarRadius),
-          child: Obx(() {
-            final profileImg = userData.profileImg;
-            final displayName = userData.name;
-
-            // Render user profile image or fallback avatar
-            return profileImg != null
-                ? Image.network(
-                    profileImg,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      // Fallback in case the network image fails
-                      return CircleAvatar(
-                        radius: SBSizes.avatarWidth / 2,
-                        backgroundColor: SBColors.primary,
-                        child: Text(
-                          SBHelperFunctions.getAvatarLetters(displayName),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
-                              ?.copyWith(color: Colors.white),
-                        ),
-                      );
-                    },
-            )
-                : CircleAvatar(
-                    radius: SBSizes.avatarWidth / 2,
-                    backgroundColor: SBColors.primary,
-                    child: Text(
-                      SBHelperFunctions.getAvatarLetters(displayName),
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium
-                          ?.copyWith(color: Colors.white),
-                    ),
-                );
-            }
-          ),
+          child: profileImg != null
+              ? Image.network(
+            profileImg!,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return _buildFallbackAvatar();
+            },
+          )
+              : _buildFallbackAvatar(),
         ),
+      ),
+    );
+  }
+
+  Widget _buildFallbackAvatar() {
+    return CircleAvatar(
+      radius: SBSizes.avatarWidth / 2,
+      backgroundColor: SBColors.primary,
+      child: Text(
+        SBHelperFunctions.getAvatarLetters(widget.userData.name),
+        style: Theme.of(context)
+            .textTheme
+            .headlineMedium
+            ?.copyWith(color: Colors.white),
       ),
     );
   }
