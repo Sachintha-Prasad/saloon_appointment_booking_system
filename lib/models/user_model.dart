@@ -6,7 +6,7 @@ class UserModel {
   final String name;
   final String email;
   final String mobileNo;
-  final String? profileImg;
+  final String? profileImageUrl;
   final Roles role;
 
   UserModel({
@@ -14,32 +14,34 @@ class UserModel {
     required this.email,
     required this.name,
     required this.mobileNo,
-    this.profileImg,
+    this.profileImageUrl,
     required this.role,
   });
+  
+  // factory method to read json data
+  factory UserModel.fromJson(Map<String, dynamic> json){
+    return UserModel(
+      id: json["_id"] ?? json["id"],
+      email: json["email"] as String,
+      name: json["name"] as String,
+      mobileNo: json["mobileNo"] as String,
+      profileImageUrl: json["profileImageUrl"] as String?,
+      role: Roles.values.byName(json["role"] as String),
+    );
+  }
 
   // convert UserModel to JSON for Firestore or other uses
   Map<String, dynamic> toJson() {
-    return {
+    final Map<String, dynamic> data = {
       "name": name,
       "email": email,
-      "mobile_no": mobileNo,
-      "profile_img": profileImg,
+      "mobileNo": mobileNo,
+      "profileImageUrl": profileImageUrl,
       "role": role.name,
     };
-  }
 
-  /// map firestore document snapshot to UserModel
-  factory UserModel.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> document) {
-    final data = document.data();
+    if(id != null) data["_id"] = id;
 
-    return UserModel(
-      id: document.id,
-      email: data?["email"],
-      name: data?["name"],
-      mobileNo: data?["mobile_no"],
-      profileImg: data?["profile_img"],
-      role: Roles.values.byName(data?["role"]),
-    );
+    return data;
   }
 }

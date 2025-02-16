@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
 import 'package:saloon_appointment_booking_system/common/widgets/custom_text_button.dart';
-import 'package:saloon_appointment_booking_system/controllers/user_controller.dart';
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
 import 'package:saloon_appointment_booking_system/screens/user_profile/profile/user_profile_screen.dart';
+import 'package:saloon_appointment_booking_system/services/storage_service.dart';
 import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
 
 class AdminDashboard extends StatelessWidget {
@@ -12,14 +12,14 @@ class AdminDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userController = Get.put(UserController());
+    final currentUser = StorageService.getUser();
 
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: SBSpacingStyle.paddingMainLayout,
           child: FutureBuilder(
-              future: userController.fetchUserData(),
+              future: currentUser,
               builder: (context, snapshot){
                 if(snapshot.connectionState == ConnectionState.done){
                   if(snapshot.hasData){

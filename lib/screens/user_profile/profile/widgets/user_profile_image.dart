@@ -24,7 +24,7 @@ class _UserProfileImageState extends State<UserProfileImage> {
   @override
   void initState() {
     super.initState();
-    profileImg = widget.userData.profileImg;
+    profileImg = widget.userData.profileImageUrl;
   }
 
   @override
@@ -32,7 +32,8 @@ class _UserProfileImageState extends State<UserProfileImage> {
     return GestureDetector(
       onTap: () async {
         // Navigate to EditProfilePictureScreen and wait for it to return
-        final updatedImage = await Get.to(() => const EditProfilePictureScreen());
+        // final updatedImage = await Get.to(() => const EditProfilePictureScreen());
+        final updatedImage = null; //temporary
 
         // Update profile image if changed
         if (updatedImage != null && updatedImage is String) {

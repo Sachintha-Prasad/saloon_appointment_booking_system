@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/common/widgets/custom_text_button.dart';
 import 'package:saloon_appointment_booking_system/common/widgets/custom_text_form_field.dart';
-import 'package:saloon_appointment_booking_system/controllers/login_controller.dart';
+import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
+import 'package:saloon_appointment_booking_system/utils/constants/regex.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
 
 class LogInForm extends StatelessWidget {
@@ -13,18 +14,17 @@ class LogInForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // logIn controller
-    final logInController = Get.put(LogInController());
+    final authController = Get.put(AuthController());
     final formKey = GlobalKey<FormState>();
 
-    // textfields controllers to get data from textfields
+    // text-fields controllers to get data from text-fields
     final emailController = TextEditingController();
     final passwordController = TextEditingController();
 
     return Form(
       key: formKey,
       child: SizedBox(
-        height: 400.0,
+        height: 440.0,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -37,6 +37,15 @@ class LogInForm extends StatelessWidget {
                   obscureText: false,
                   controller: emailController,
                   prefixIcon: Icons.email_outlined,
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Email is required';
+                    }
+                    if (!SBRegEx.emailRegEx.hasMatch(value)) {
+                      return 'Enter a valid email';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: SBSizes.spaceBtwInputFields),
 
@@ -46,6 +55,12 @@ class LogInForm extends StatelessWidget {
                   obscureText: true,
                   controller: passwordController,
                   prefixIcon: Icons.lock_outlined,
+                  validator: (value){
+                    if(value == null || value.trim().isEmpty){
+                      return 'Password is required';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: SBSizes.spaceBtwInputFields),
 
@@ -67,7 +82,7 @@ class LogInForm extends StatelessWidget {
                     btnText: 'Log In',
                     onPressed: () => {
                       if(formKey.currentState!.validate()){
-                        logInController.logInUser(
+                      authController.login(
                           emailController.text.trim(),
                           passwordController.text.trim()
                         )
