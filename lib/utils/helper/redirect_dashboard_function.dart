@@ -11,11 +11,11 @@ class SBRedirectToDashboard {
   static Roles getRoleFromString(String role) {
     switch (role) {
       case 'CLIENT':
-        return Roles.CLIENT;
+        return Roles.client;
       case 'STYLIST':
-        return Roles.STYLIST;
+        return Roles.stylist;
       case 'ADMIN':
-        return Roles.ADMIN;
+        return Roles.admin;
       default:
         throw Exception("Unknown role: $role");
     }
@@ -23,11 +23,11 @@ class SBRedirectToDashboard {
 
   static void getDashboardBasedOnRole(Roles role) {
     // Navigate based on the role
-    if (role == Roles.CLIENT) {
+    if (role == Roles.client) {
       Get.offAll(() => const ClientDashboard());
-    } else if (role == Roles.STYLIST) {
+    } else if (role == Roles.stylist) {
       Get.offAll(() => const StylistDashboard());
-    } else if (role == Roles.ADMIN) {
+    } else if (role == Roles.admin) {
       Get.offAll(() => const AdminDashboard());
     } else {
       Get.offAll(() => const OnboardingScreen());

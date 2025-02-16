@@ -15,6 +15,9 @@ dependencies:
     image_picker: ^1.1.2
     image: ^4.2.0
 
+    # secure storage
+    flutter_secure_storage: ^9.2.4
+
     # state management packages
     get: ^4.6.6
 

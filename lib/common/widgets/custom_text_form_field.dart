@@ -102,6 +102,20 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             width: SBSizes.borderWidth,
           ),
         ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(SBSizes.inputFieldRadius),
+          borderSide: const BorderSide(
+            color: SBColors.red,
+            width: SBSizes.borderWidth,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(SBSizes.inputFieldRadius),
+          borderSide: const BorderSide(
+            color: SBColors.red,
+            width: SBSizes.borderWidth,
+          ),
+        ),
         suffixIcon: widget.obscureText
             ? IconButton(
           icon: Icon(

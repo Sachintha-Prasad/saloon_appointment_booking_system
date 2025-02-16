@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:saloon_appointment_booking_system/controllers/logout_controller.dart';
-import 'package:saloon_appointment_booking_system/controllers/user_controller.dart';
+import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
 import 'package:saloon_appointment_booking_system/screens/user_profile/profile/widgets/user_profile_image.dart';
 import 'package:saloon_appointment_booking_system/screens/user_profile/profile/widgets/user_profile_menu.dart';
 import 'package:saloon_appointment_booking_system/screens/user_profile/profile/widgets/user_profile_menu_item.dart';
+import 'package:saloon_appointment_booking_system/services/storage_service.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
 import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
@@ -15,9 +15,9 @@ class UserProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userController = Get.put(UserController());
-    final logoutController = Get.put(LogoutController());
     final isDark = SBHelperFunctions.isDarkMode(context);
+    final currentUser = StorageService.getUser();
+    final AuthController authController = Get.put(AuthController());
 
     return Scaffold(
       appBar: AppBar(
@@ -40,7 +40,7 @@ class UserProfileScreen extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(SBSizes.defaultSpace),
           child: FutureBuilder(
-            future: userController.fetchUserData(),
+            future: currentUser,
             builder: (context, snapshot){
               if(snapshot.connectionState == ConnectionState.done){
                 if(snapshot.hasData){
@@ -86,7 +86,7 @@ class UserProfileScreen extends StatelessWidget {
                         prefixIconColor: SBColors.red,
                         isTrailingIconVisible: false,
                         textColor: SBColors.red,
-                        onTap: () => logoutController.logoutUser(),
+                        onTap: () => authController.logout(),
                       ),
                     ],
                   );
