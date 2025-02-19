@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
 
-class UserProfileMenuItem extends StatelessWidget {
+class ClientProfileMenuItem extends StatelessWidget {
   final String itemText;
   final Color? textColor;
   final IconData prefixIcon;
@@ -10,7 +10,7 @@ class UserProfileMenuItem extends StatelessWidget {
   final VoidCallback onTap;
   final bool? isTrailingIconVisible;
 
-  const UserProfileMenuItem({
+  const ClientProfileMenuItem({
     required this.itemText,
     this.textColor,
     required this.prefixIcon,
