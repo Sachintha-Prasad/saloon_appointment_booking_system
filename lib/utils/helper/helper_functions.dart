@@ -37,6 +37,12 @@ class SBHelperFunctions {
     return firstLetter + lastLetter;
   }
 
+  // function to capitalize strings======================================================================================================
+  static String capitalizeString(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
+  }
+
   // snackbars===========================================================================================================================
   // show normal snackbar
   static Future<void>? showSnackbar(String message) {

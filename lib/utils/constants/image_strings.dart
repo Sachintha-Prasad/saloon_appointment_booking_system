@@ -13,4 +13,12 @@ class SBImages {
 
   // sample avatar image --> this will be replace with actual user image
   static String avatarImg = 'assets/images/avatar.png';
+
+
+  // client screens images
+  static String clientCarouselImg1 = 'assets/images/clients/carousel_img_1.png';
+  static String clientCarouselImg2 = 'assets/images/clients/carousel_img_2.png';
+  static String clientCarouselImg3 = 'assets/images/clients/carousel_img_3.png';
+
+  static String clientAboutImage = 'assets/images/clients/about_img.png';
 }
