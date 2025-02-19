@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
-import 'package:saloon_appointment_booking_system/common/widgets/custom_text_button.dart';
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
-import 'package:saloon_appointment_booking_system/screens/user_profile/profile/user_profile_screen.dart';
 import 'package:saloon_appointment_booking_system/services/storage_service.dart';
 import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
 
@@ -39,8 +36,6 @@ class AdminDashboard extends StatelessWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         const SizedBox(height: 16),
-
-                        CustomTextButton(btnText: "Profile", onPressed: ()=>Get.to(const UserProfileScreen()),),
                       ],
                     );
                   } else if(snapshot.hasError) {
