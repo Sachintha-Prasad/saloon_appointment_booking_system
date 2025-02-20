@@ -17,7 +17,7 @@ class SBAppTheme {
       appBarTheme: SBAppBarTheme.appBarThemeLight,
       textTheme: SBTextTheme.lightTextTheme,
       textSelectionTheme: SBTextSelectionTheme.textSelectionThemeData,
-      progressIndicatorTheme: SBProgressIndicatorTheme.progressIndicatorThemeData
+      progressIndicatorTheme: SBProgressIndicatorTheme.progressIndicatorThemeData,
   );
 
 
@@ -30,6 +30,6 @@ class SBAppTheme {
       appBarTheme: SBAppBarTheme.appBarThemeDark,
       textTheme: SBTextTheme.darkTextTheme,
       textSelectionTheme: SBTextSelectionTheme.textSelectionThemeData,
-      progressIndicatorTheme: SBProgressIndicatorTheme.progressIndicatorThemeData
+      progressIndicatorTheme: SBProgressIndicatorTheme.progressIndicatorThemeData,
   );
 }

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/enum.dart';
 
 class UserModel {
@@ -30,7 +29,7 @@ class UserModel {
     );
   }
 
-  // convert UserModel to JSON for Firestore or other uses
+  // convert UserModel to JSON
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {
       "name": name,

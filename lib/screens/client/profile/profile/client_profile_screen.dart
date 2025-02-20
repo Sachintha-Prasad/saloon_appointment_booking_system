@@ -1,39 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:saloon_appointment_booking_system/common/widgets/theme_toggle_button.dart';
 import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
-import 'package:saloon_appointment_booking_system/screens/user_profile/profile/widgets/user_profile_image.dart';
-import 'package:saloon_appointment_booking_system/screens/user_profile/profile/widgets/user_profile_menu.dart';
-import 'package:saloon_appointment_booking_system/screens/user_profile/profile/widgets/user_profile_menu_item.dart';
+import 'package:saloon_appointment_booking_system/screens/client/profile/profile/widgets/client_profile_image.dart';
+import 'package:saloon_appointment_booking_system/screens/client/profile/profile/widgets/client_profile_menu.dart';
+import 'package:saloon_appointment_booking_system/screens/client/profile/profile/widgets/client_profile_menu_item.dart';
 import 'package:saloon_appointment_booking_system/services/storage_service.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
-import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
 
-class UserProfileScreen extends StatelessWidget {
-  const UserProfileScreen({super.key});
+class ClientProfileScreen extends StatelessWidget {
+  const ClientProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = SBHelperFunctions.isDarkMode(context);
     final currentUser = StorageService.getUser();
     final AuthController authController = Get.put(AuthController());
+
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        leading: IconButton(onPressed: Get.back, icon: const Icon(Icons.chevron_left)),
         title: Text("Profile", style: Theme.of(context).textTheme.headlineSmall,),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: SBSizes.sm),
-            child: IconButton(onPressed: ()=>{},
-              icon: isDark ?
-                const Icon(Icons.light_mode_outlined, size: SBSizes.iconMd,) :
-                const Icon(Icons.dark_mode_outlined, size: SBSizes.iconMd),
-            ),
-          )
-        ],
+        actions: const [ThemeToggleButton()],
       ),
 
       body: SingleChildScrollView(
@@ -53,7 +43,7 @@ class UserProfileScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             // user profile image
-                            UserProfileImage(userData: userData),
+                            ClientProfileImage(userData: userData),
                             const SizedBox(height: SBSizes.sm,),
 
                             // user name
@@ -73,7 +63,7 @@ class UserProfileScreen extends StatelessWidget {
                       const SizedBox(height: SBSizes.spaceBtwSections,),
 
                       // menu section======================================================================================
-                      const UserProfileMenu(),
+                      const ClientProfileMenu(),
                       const SizedBox(height: SBSizes.spaceBtwSections,),
 
                       // profile divider===================================================================================
@@ -81,7 +71,7 @@ class UserProfileScreen extends StatelessWidget {
                       const SizedBox(height: SBSizes.spaceBtwSections,),
 
                       // log out button=====================================================================================
-                      UserProfileMenuItem(itemText: "Log Out",
+                      ClientProfileMenuItem(itemText: "Log Out",
                         prefixIcon: Icons.logout_outlined,
                         prefixIconColor: SBColors.red,
                         isTrailingIconVisible: false,

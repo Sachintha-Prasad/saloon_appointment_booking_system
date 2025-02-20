@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
-import 'package:saloon_appointment_booking_system/screens/user_profile/edit_profile/edit_profile_image_screen.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
 import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
 
-class UserProfileImage extends StatefulWidget {
-  const UserProfileImage({
+class ClientProfileImage extends StatefulWidget {
+  const ClientProfileImage({
     super.key,
     required this.userData,
   });
@@ -15,10 +13,10 @@ class UserProfileImage extends StatefulWidget {
   final UserModel userData;
 
   @override
-  _UserProfileImageState createState() => _UserProfileImageState();
+  _ClientProfileImageState createState() => _ClientProfileImageState();
 }
 
-class _UserProfileImageState extends State<UserProfileImage> {
+class _ClientProfileImageState extends State<ClientProfileImage> {
   late String? profileImg;
 
   @override
@@ -75,3 +73,4 @@ class _UserProfileImageState extends State<UserProfileImage> {
     );
   }
 }
+

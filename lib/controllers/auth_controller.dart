@@ -10,16 +10,19 @@ import 'package:saloon_appointment_booking_system/utils/helper/redirect_dashboar
 import 'package:http/http.dart' as http;
 
 class AuthController extends GetxController {
+  static AuthController get instance => Get.find();
+
   final ApiService _apiService = Get.put(ApiService());
   final Rx<UserModel?> currentUser = Rx<UserModel?>(null);
 
   @override
+  // initially run autoLogin()
   void onInit(){
     super.onInit();
     autoLogin();
   }
 
-
+  // handle auto login the user to keep user logged when app close
   Future<void> autoLogin() async {
     try{
       final responseData = await _apiService.authenticatedGet('auth/me');
@@ -37,6 +40,7 @@ class AuthController extends GetxController {
     }
   }
 
+  // handle user register
   Future<void> register(UserModel user, String password) async {
     try {
       final response = await http.post(
@@ -52,7 +56,6 @@ class AuthController extends GetxController {
       );
 
       final responseData = jsonDecode(response.body);
-      print(responseData);
 
       if (response.statusCode == 201) {
         await _handleSuccessfulAuth(responseData);
@@ -64,6 +67,7 @@ class AuthController extends GetxController {
     }
   }
 
+  // handle user login
   Future<void> login(String email, String password) async {
     try {
       final response = await http.post(
@@ -73,7 +77,6 @@ class AuthController extends GetxController {
       );
 
       final responseData = jsonDecode(response.body);
-      print(responseData);
 
       if (response.statusCode == 200) {
         await _handleSuccessfulAuth(responseData);
@@ -85,7 +88,7 @@ class AuthController extends GetxController {
     }
   }
 
-
+  // handle user logout
   Future<void> logout() async {
     await StorageService.deleteToken();
     await StorageService.deleteUser();
@@ -93,7 +96,7 @@ class AuthController extends GetxController {
     Get.offAll(() => const OnboardingScreen());
   }
 
-
+  // this function use to save data to storage when successful user register or login
   Future<void> _handleSuccessfulAuth(Map<String, dynamic> responseData) async {
     final token = responseData['token'];
     final userData = responseData['user'];
@@ -103,7 +106,6 @@ class AuthController extends GetxController {
     await StorageService.saveUser(user);
     currentUser.value = user;
 
-    print(currentUser.value);
 
     SBRedirectToDashboard.getDashboardBasedOnRole(currentUser.value!.role);
   }

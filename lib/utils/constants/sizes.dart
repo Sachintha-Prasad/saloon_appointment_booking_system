@@ -14,6 +14,7 @@ class SBSizes {
   static const double iconSm = 16.0;
   static const double iconMd = 20.0;
   static const double iconLg = 24.0;
+  static const double iconXl = 28.0;
 
   // font sizes
   static const double fontSizeXs = 14.0;
@@ -46,6 +47,9 @@ class SBSizes {
 
   // app bar height
   static const double appBarHeight = 56.0;
+
+  // navbar height
+  static const double navbarHeight = 80.0;
 
   // avatar sizes
   static const double avatarWidth = 120.0;

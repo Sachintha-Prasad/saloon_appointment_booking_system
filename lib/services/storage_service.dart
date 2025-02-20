@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
 
@@ -7,6 +8,7 @@ class StorageService{
   static const _storage = FlutterSecureStorage();
   static const _tokenKey = 'authToken';
   static const _userKey = 'currentUser';
+  static const _themeKey = 'themeMode';
   
   // token operations
   static Future<void> saveToken(String token) async => (
@@ -37,4 +39,13 @@ class StorageService{
   static Future<void> deleteUser() async => (
     await _storage.delete(key: _userKey)
   );
+
+  // theme operations
+  static Future<void> setTheme(String themeMode) async => (
+    await _storage.write(key: _themeKey, value: themeMode)
+  );
+
+  static Future<String?> getTheme() async  {
+    return await _storage.read(key: _themeKey);
+  }
 }
