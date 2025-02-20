@@ -6,7 +6,7 @@ class SBAppBarTheme {
 
   // app bar light theme
   static const AppBarTheme appBarThemeLight = AppBarTheme(
-    backgroundColor: SBColors.bgLight
+    backgroundColor: SBColors.bgLight,
   );
 
   // app bar dark theme

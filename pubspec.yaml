@@ -38,6 +38,7 @@ dependencies:
 
     # generate a skeleton while fetching data
     skeletonizer: ^1.4.3
+    easy_date_timeline: ^2.0.6
 
 dev_dependencies:
     flutter_test:

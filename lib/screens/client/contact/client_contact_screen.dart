@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
 import 'package:saloon_appointment_booking_system/screens/client/contact/about_us.dart';
 
-class ClientContact extends StatelessWidget {
-  const ClientContact({super.key});
+class ClientContactScreen extends StatelessWidget {
+  const ClientContactScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

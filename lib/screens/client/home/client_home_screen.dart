@@ -8,8 +8,8 @@ import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
 import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
 
-class ClientHome extends StatelessWidget {
-  const ClientHome({super.key});
+class ClientHomeScreen extends StatelessWidget {
+  const ClientHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
