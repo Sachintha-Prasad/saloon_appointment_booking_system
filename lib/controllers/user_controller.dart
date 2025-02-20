@@ -1,12 +1,16 @@
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
+import 'package:saloon_appointment_booking_system/services/api_service.dart';
 import 'package:saloon_appointment_booking_system/services/storage_service.dart';
 
 class UserController extends GetxController{
   static UserController get instance => Get.find();
 
+  static ApiService _apiService = Get.put(ApiService());
+
   Rx<UserModel?> currentUser = Rx<UserModel?>(null);
   Rx<bool> isLoading = true.obs;
+  Rx<List<UserModel?>> stylistList = Rx<List<UserModel?>>([]);
 
   @override
   void onInit(){
@@ -20,4 +24,10 @@ class UserController extends GetxController{
     currentUser.value = user;
     isLoading.value = false;
   }
+
+  // fetch stylist data
+  // Future<List<UserModel?>> fetchStylistList() async{
+  //
+  // }
 }
+
