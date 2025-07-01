@@ -21,4 +21,8 @@ class SBImages {
   static String clientCarouselImg3 = 'assets/images/clients/carousel_img_3.png';
 
   static String clientAboutImage = 'assets/images/clients/about_img.png';
+
+  // empty placeholder images
+  static String emptyImgLight = 'assets/images/empty_placeholder/empty_placeholder_light.png';
+  static String emptyImgDark = 'assets/images/empty_placeholder/empty_placeholder_dark.png';
 }

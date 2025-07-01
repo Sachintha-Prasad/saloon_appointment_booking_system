@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
-import 'package:saloon_appointment_booking_system/models/user_model.dart';
-import 'package:saloon_appointment_booking_system/services/storage_service.dart';
+import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
 
 class AdminDashboard extends StatelessWidget {
@@ -9,47 +9,46 @@ class AdminDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = StorageService.getUser();
+    final AuthController authController = Get.find<AuthController>();
 
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: SBSpacingStyle.paddingMainLayout,
-          child: FutureBuilder(
-              future: currentUser,
-              builder: (context, snapshot){
-                if(snapshot.connectionState == ConnectionState.done){
-                  if(snapshot.hasData){
-                    UserModel userData = snapshot.data as UserModel;
+    return Obx(() {
+      if (authController.isLoading.value) {
+        return const Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        );
+      }
 
-                    return  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Hello Admin ${SBHelperFunctions.getFirstName(userData.name)},",
-                          style: Theme.of(context).textTheme.headlineLarge,
-                        ),
-                        const SizedBox(height: 8),
+      final userData = authController.currentUser.value;
 
-                        Text(
-                          'Find the service you want, and treat yourself',
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                    );
-                  } else if(snapshot.hasError) {
-                    return Center(child: Text(snapshot.error.toString()));
-                  } else {
-                    return const Center(child: Text("Something went wrong"));
-                  }
+      if (userData == null) {
+        return const Scaffold(
+          body: Center(
+            child: Text('No user data found.'),
+          ),
+        );
+      }
 
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              }),
+      return Scaffold(
+        body: SafeArea(
+          child: Padding(
+              padding: SBSpacingStyle.paddingMainLayout,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Hello Admin ${SBHelperFunctions.getFirstName(userData.name)},",
+                    style: Theme.of(context).textTheme.headlineLarge,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Find the service you want, and treat yourself',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              )),
         ),
-      ),
-    );
+      );
+    });
   }
 }

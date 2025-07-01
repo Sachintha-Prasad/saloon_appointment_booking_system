@@ -1,29 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:saloon_appointment_booking_system/services/storage_service.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ThemeController extends GetxController {
-  static ThemeController get instance => Get.find();
+  final GetStorage _storage = GetStorage();
+  final String _themeKey = 'themeMode';
 
-  RxBool isDarkMode = false.obs;
+  final Rx<ThemeMode> themeMode = ThemeMode.system.obs;
 
-  Future<void> loadThemeFromStorage() async {
-    String? savedTheme = await StorageService.getTheme();
+  @override
+  void onInit() {
+    super.onInit();
+    loadThemeFromStorage();
+  }
 
-    if (savedTheme == null) {
-      const ThemeMode themeMode = ThemeMode.system;
-      isDarkMode.value = themeMode == ThemeMode.dark;
+  void _saveThemeToStorage(String theme) {
+    _storage.write(_themeKey, theme);
+  }
+
+  void loadThemeFromStorage() {
+    String? savedTheme = _storage.read(_themeKey);
+
+    if (savedTheme == 'dark') {
+      themeMode.value = ThemeMode.dark;
+    } else if (savedTheme == 'light') {
+      themeMode.value = ThemeMode.light;
     } else {
-      isDarkMode.value = savedTheme == 'dark';
+      themeMode.value = ThemeMode.system;
     }
 
-    update(); // Notify UI to rebuild
+    Get.changeThemeMode(themeMode.value);
   }
 
   // handle theme toggle
   void toggleTheme() {
-    isDarkMode.value = !isDarkMode.value;
-    Get.changeThemeMode(isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
-    StorageService.setTheme(isDarkMode.value ? "dark" : "light" );
+    if (themeMode.value == ThemeMode.dark) {
+      themeMode.value = ThemeMode.light;
+      _saveThemeToStorage('light');
+    } else {
+      themeMode.value = ThemeMode.dark;
+      _saveThemeToStorage('dark');
+    }
+
+    Get.changeThemeMode(themeMode.value);
   }
 }

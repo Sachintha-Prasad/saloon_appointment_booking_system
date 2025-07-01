@@ -16,20 +16,22 @@ class ClientDashboard extends StatelessWidget {
     return Scaffold(
       // navbar======================================================================================================
       bottomNavigationBar:
-        Container(
-            padding: const EdgeInsets.symmetric(vertical: SBSizes.md),
-            color: SBColors.darkGrey.withOpacity(0.1),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ClientNavItem(icon: Icons.home_filled, index: 0),
-                ClientNavItem(icon: Icons.calendar_month, index: 1),
-                ClientNavItem(icon: Icons.phone, index: 2),
-                ClientNavItem(icon: Icons.person, index: 3),
-              ],
-            ),
+        ClipRRect(
+          borderRadius: const BorderRadius.only(topLeft: Radius.circular(SBSizes.borderRadiusLg), topRight: Radius.circular(SBSizes.borderRadiusLg)),
+          child: Container(
+              padding: const EdgeInsets.symmetric(vertical: SBSizes.md),
+              color: SBColors.darkGrey.withOpacity(0.1),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ClientNavItem(icon: Icons.home_filled, index: 0),
+                  ClientNavItem(icon: Icons.calendar_month, index: 1),
+                  ClientNavItem(icon: Icons.phone, index: 2),
+                  ClientNavItem(icon: Icons.person, index: 3),
+                ],
+              ),
+          ),
         ),
-
       // render screens when change the indexes=====================================================================
       body: Obx(() => navigationController.screens[navigationController.selectedIndex.value]),
     );

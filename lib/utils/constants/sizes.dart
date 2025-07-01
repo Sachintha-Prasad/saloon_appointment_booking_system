@@ -40,6 +40,7 @@ class SBSizes {
   static const double borderRadiusSm = 4.0;
   static const double borderRadiusMd = 8.0;
   static const double borderRadiusLg = 12.0;
+  static const double borderRadiusXl = 16.0;
 
   // input field sizes
   static const double inputFieldRadius = 48.0;

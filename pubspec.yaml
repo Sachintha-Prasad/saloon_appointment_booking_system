@@ -20,6 +20,7 @@ dependencies:
 
     # state management packages
     get: ^4.6.6
+    get_storage: ^2.1.1
 
     # firebase packages
     firebase_core: ^3.8.1
@@ -38,7 +39,10 @@ dependencies:
 
     # generate a skeleton while fetching data
     skeletonizer: ^1.4.3
+
+    # date picker
     easy_date_timeline: ^2.0.6
+
 
 dev_dependencies:
     flutter_test:
@@ -61,4 +65,5 @@ flutter:
         - assets/icons/
         - assets/images/
         - assets/images/clients/
+        - assets/images/empty_placeholder/
         - assets/animations/
