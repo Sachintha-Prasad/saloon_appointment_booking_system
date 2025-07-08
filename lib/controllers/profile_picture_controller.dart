@@ -33,7 +33,8 @@ class ProfilePictureController extends GetxController {
       final pickedFile = await _imagePicker.pickImage(source: source);
 
       if (pickedFile == null) {
-        SBHelperFunctions.showSnackbar('no image selected, please pick an image to continue.');
+        SBHelperFunctions.showSnackbar(
+            'no image selected, please pick an image to continue.');
         return;
       }
 
@@ -51,17 +52,20 @@ class ProfilePictureController extends GetxController {
   // compress image to reduce file size
   Future<File> _compressImage(File image) async {
     try {
-      final img.Image? decodedImage = img.decodeImage(await image.readAsBytes());
+      final img.Image? decodedImage =
+          img.decodeImage(await image.readAsBytes());
 
       if (decodedImage == null) {
         throw Exception('failed to decode image');
       }
 
       // compressing to 50% quality
-      final List<int> compressedBytes = img.encodeJpg(decodedImage, quality: 50);
+      final List<int> compressedBytes =
+          img.encodeJpg(decodedImage, quality: 50);
 
       // writing the compressed bytes to a new file
-      final compressedFile = await File(image.path).writeAsBytes(compressedBytes);
+      final compressedFile =
+          await File(image.path).writeAsBytes(compressedBytes);
 
       return compressedFile;
     } catch (e) {
@@ -83,7 +87,8 @@ class ProfilePictureController extends GetxController {
         ..fields["upload_preset"] = uploadPreset
         ..files.add(await http.MultipartFile.fromPath('file', image.path));
 
-      final basicAuth = "Basic ${base64Encode(utf8.encode('$apiKey:$apiSecret'))}";
+      final basicAuth =
+          "Basic ${base64Encode(utf8.encode('$apiKey:$apiSecret'))}";
       request.headers['Authorization'] = basicAuth;
 
       final response = await request.send();
@@ -95,7 +100,8 @@ class ProfilePictureController extends GetxController {
         debugPrint('image uploaded successfully: $secureImgUrl');
         return secureImgUrl;
       } else {
-        debugPrint('cloudinary upload failed: ${jsonResponse['error']['message']}');
+        debugPrint(
+            'cloudinary upload failed: ${jsonResponse['error']['message']}');
         throw Exception("cloudinary upload failed");
       }
     } catch (error) {
@@ -108,7 +114,8 @@ class ProfilePictureController extends GetxController {
   // update profile picture (PUT request to your backend)
   Future<void> updateProfilePicture() async {
     if (selectedImage.value == null) {
-      SBHelperFunctions.showSnackbar('no image selected, please pick an image first.');
+      SBHelperFunctions.showSnackbar(
+          'no image selected, please pick an image first.');
       return;
     }
 
@@ -116,17 +123,19 @@ class ProfilePictureController extends GetxController {
       final token = await SecureStorageService.getToken();
       final currentUser = authController.currentUser.value;
 
-
       if (currentUser == null) {
-        SBHelperFunctions.showSnackbar('unauthorized ,please login to update your profile.');
+        SBHelperFunctions.showSnackbar(
+            'unauthorized ,please login to update your profile.');
         return;
       }
 
       // upload image to cloudinary first
-      final imageUrl = await _uploadProfileImageToCloudinary(selectedImage.value!);
+      final imageUrl =
+          await _uploadProfileImageToCloudinary(selectedImage.value!);
 
       if (imageUrl == null) {
-        SBHelperFunctions.showSnackbar('upload failed , failed to upload profile image.');
+        SBHelperFunctions.showSnackbar(
+            'upload failed , failed to upload profile image.');
         return;
       }
 
@@ -137,9 +146,7 @@ class ProfilePictureController extends GetxController {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token'
         },
-        body: jsonEncode({
-          'profileImageUrl': imageUrl
-        }),
+        body: jsonEncode({'profileImageUrl': imageUrl}),
       );
 
       final responseData = jsonDecode(response.body);
@@ -147,9 +154,12 @@ class ProfilePictureController extends GetxController {
       if (response.statusCode == 200) {
         SBHelperFunctions.showSuccessSnackbar('profile image updated');
         authController.currentUser.value = UserModel.fromJson(responseData);
+        debugPrint(
+            'profile image updated successfully: ${responseData['profileImageUrl']}');
       } else {
         SBCustomErrorHandler.handleErrorResponse(
             responseData, 'failed to update profile image.');
+        debugPrint('profile update failed: ${responseData['message']}');
       }
     } catch (error) {
       debugPrint('profile update Error: $error');

@@ -78,6 +78,8 @@ class AppointmentBookingScreen extends StatelessWidget {
 
             Obx(() {
               final selectedStylist = userController.selectedStylist.value;
+              // debugPrint(
+              //     "Selected Stylist: ${selectedStylist?.name ?? 'None'}");
 
               if (selectedStylist == null) {
                 return const EmptyPlaceholder(
@@ -88,7 +90,8 @@ class AppointmentBookingScreen extends StatelessWidget {
               final selectedSlot = userController.selectedTimeSlot.value;
 
               if (availableSlots.isEmpty) {
-                return const EmptyPlaceholder(placeholderText: "No slots available");
+                return const EmptyPlaceholder(
+                    placeholderText: "No slots available");
               }
 
               return Skeletonizer(
@@ -103,51 +106,53 @@ class AppointmentBookingScreen extends StatelessWidget {
                     final isAvailable = availableSlots.contains(slotNo);
                     final isSelected = selectedSlot == slotNo;
 
-                    return userController.isLoading.value ?
-                    const TimeSlotCardSkeleton():
-                    GestureDetector(
-                      onTap: isAvailable
-                          ? () => userController.selectTimeSlot(slotNo)
-                          : null,
-                      child: Opacity(
-                        opacity: isAvailable ? 1.0 : 0.5,
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: isAvailable
-                                ? SBColors.primary
-                                : Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: isAvailable
-                                  ? SBColors.primary
-                                  : Colors.grey.shade300,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '${slot['startTime']} - ${slot['endTime']}',
-                                style: TextStyle(
+                    return userController.isLoading.value
+                        ? const TimeSlotCardSkeleton()
+                        : GestureDetector(
+                            onTap: isAvailable
+                                ? () => userController.selectTimeSlot(slotNo)
+                                : null,
+                            child: Opacity(
+                              opacity: isAvailable ? 1.0 : 0.5,
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 12),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
+                                decoration: BoxDecoration(
                                   color: isAvailable
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontWeight: FontWeight.w500,
+                                      ? SBColors.primary
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: isAvailable
+                                        ? SBColors.primary
+                                        : Colors.grey.shade300,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${slot['startTime']} - ${slot['endTime']}',
+                                      style: TextStyle(
+                                        color: isAvailable
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    if (isSelected && isAvailable)
+                                      const Icon(Icons.check_circle,
+                                          color: Colors.white),
+                                    if (!isAvailable)
+                                      const Icon(Icons.lock,
+                                          color: Colors.grey),
+                                  ],
                                 ),
                               ),
-                              if (isSelected && isAvailable)
-                                const Icon(Icons.check_circle,
-                                    color: Colors.white),
-                              if (!isAvailable)
-                                const Icon(Icons.lock, color: Colors.grey),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
+                            ),
+                          );
                   },
                 ),
               );

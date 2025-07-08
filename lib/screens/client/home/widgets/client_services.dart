@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/common/widgets/custom_text_button.dart';
 import 'package:saloon_appointment_booking_system/controllers/services_controller.dart';
+import 'package:saloon_appointment_booking_system/screens/client/appointments/client_appointment_screen.dart';
 import 'package:saloon_appointment_booking_system/screens/client/home/widgets/service_card.dart';
 import 'package:saloon_appointment_booking_system/screens/client/home/widgets/service_card_skelton.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:saloon_appointment_booking_system/controllers/client_dashboard_navigation_controller.dart';
 
 class ClientServices extends StatelessWidget {
   const ClientServices({super.key});
@@ -19,7 +21,6 @@ class ClientServices extends StatelessWidget {
       children: [
         Text('Our services', style: Theme.of(context).textTheme.headlineMedium),
         const SizedBox(height: SBSizes.md),
-
         SizedBox(
           height: 220.0,
           child: Obx(() {
@@ -47,10 +48,13 @@ class ClientServices extends StatelessWidget {
           }),
         ),
         const SizedBox(height: SBSizes.defaultSpace),
-
         CustomTextButton(
           btnText: "Book an Appointment",
-          onPressed: () => {},
+          onPressed: () {
+            Get.find<ClientDashboardNavigationController>()
+                .selectedIndex
+                .value = 1;
+          },
         ),
       ],
     );
