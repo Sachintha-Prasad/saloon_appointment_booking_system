@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/screens/client/home/widgets/client_services.dart';
 import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
 import 'package:saloon_appointment_booking_system/controllers/user_controller.dart';
@@ -13,18 +14,22 @@ class ClientHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UserController userController = Get.put(UserController());
+    final AuthController authController = Get.find<AuthController>();
 
     return Obx(() {
-      if (userController.isLoading.value) {
+      if (authController.isLoading.value) {
         return const Scaffold(
           body: Center(child: CircularProgressIndicator()),
         );
       }
 
-      if (userController.currentUser.value == null) {
+      final userData = authController.currentUser.value;
+
+      if (userData == null) {
         return const Scaffold(
-          body: Center(child: Text("User data not found")),
+          body: Center(
+            child: Text('No user data found.'),
+          ),
         );
       }
 
@@ -39,7 +44,7 @@ class ClientHomeScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 Text(
-                  "${SBHelperFunctions.getFirstName(userController.currentUser.value!.name)}",
+                  "${SBHelperFunctions.getFirstName(userData!.name)}",
                   style: Theme.of(context)
                       .textTheme
                       .headlineLarge

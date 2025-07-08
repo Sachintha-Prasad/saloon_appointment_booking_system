@@ -20,6 +20,12 @@ class SBHelperFunctions {
     return nameParts[0].capitalize!;
   }
 
+  // function to convert date into YYYY-MM-DD format=========================================================================================
+  static String convertDate(DateTime date){
+    return date.toIso8601String().split("T")[0];
+  }
+
+
   // function to get avatar characters when there is no profile img==========================================================================
   static String getAvatarLetters(String name) {
     if (name.isEmpty) return "NA";

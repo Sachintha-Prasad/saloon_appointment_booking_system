@@ -16,7 +16,7 @@ class RegisterForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authController = Get.put(AuthController());
+    final AuthController authController = Get.find<AuthController>();
     final formKey = GlobalKey<FormState>();
 
     // text-fields controllers to get data from text-fields

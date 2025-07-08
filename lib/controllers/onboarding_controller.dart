@@ -5,11 +5,9 @@ import 'package:saloon_appointment_booking_system/screens/auth/login/login_scree
 import 'package:saloon_appointment_booking_system/screens/auth/register/register_screen.dart';
 
 class OnboardingController extends GetxController {
-  static OnboardingController get instance => Get.find();
-
   final PageController pageController = PageController();
 
-  RxInt currentIndex = 0.obs;
+  final RxInt currentIndex = 0.obs;
 
   // navigate to Register Screen
   void navigateToRegister() {

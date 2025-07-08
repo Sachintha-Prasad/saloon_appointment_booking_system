@@ -24,7 +24,6 @@ class ServiceCard extends StatelessWidget {
             },
           ),
         ),
-
         Positioned(
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: SBSizes.defaultSpace, vertical: SBSizes.xs),

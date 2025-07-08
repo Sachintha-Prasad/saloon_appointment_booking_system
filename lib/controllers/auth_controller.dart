@@ -1,26 +1,21 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
 import 'package:saloon_appointment_booking_system/screens/auth/onboarding/onboarding_screen.dart';
 import 'package:saloon_appointment_booking_system/services/api_service.dart';
-import 'package:saloon_appointment_booking_system/services/storage_service.dart';
+import 'package:saloon_appointment_booking_system/services/secure_storage_service.dart';
 import 'package:saloon_appointment_booking_system/utils/error_handlers/custom_error_handler.dart';
 import 'package:saloon_appointment_booking_system/utils/helper/redirect_dashboard_function.dart';
 import 'package:http/http.dart' as http;
 
 class AuthController extends GetxController {
-  static AuthController get instance => Get.find();
+  final ApiService _apiService = Get.find<ApiService>();
 
-  final ApiService _apiService = Get.put(ApiService());
-  final Rx<UserModel?> currentUser = Rx<UserModel?>(null);
-
-  @override
-  // initially run autoLogin()
-  void onInit(){
-    super.onInit();
-    autoLogin();
-  }
+  final RxBool isLoading = true.obs;
+  final Rxn<UserModel> currentUser = Rxn<UserModel>();
+  
 
   // handle auto login the user to keep user logged when app close
   Future<void> autoLogin() async {
@@ -28,15 +23,16 @@ class AuthController extends GetxController {
       final responseData = await _apiService.authenticatedGet('auth/me');
 
       if(responseData.statusCode == 200) {
+        isLoading.value = false;
         final userData = jsonDecode(responseData.body);
         currentUser.value = UserModel.fromJson(userData);
-        await StorageService.saveUser(currentUser.value as UserModel);
         SBRedirectToDashboard.getDashboardBasedOnRole(currentUser.value!.role);
+      } else {
+        _handleAuthFailure();
       }
     } catch (err) {
-        await StorageService.deleteToken();
-        await StorageService.deleteUser();
-        currentUser.value = null;
+        debugPrint('AutoLogin error: $err');
+        _handleAuthFailure();
     }
   }
 
@@ -60,10 +56,12 @@ class AuthController extends GetxController {
       if (response.statusCode == 201) {
         await _handleSuccessfulAuth(responseData);
       } else {
-        SBCustomErrorHandler.handleErrorResponse(responseData, 'Registration failed');
+        SBCustomErrorHandler.handleErrorResponse(responseData, 'registration failed');
       }
     } catch (err) {
       SBCustomErrorHandler.handleAuthError(err);
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -90,8 +88,7 @@ class AuthController extends GetxController {
 
   // handle user logout
   Future<void> logout() async {
-    await StorageService.deleteToken();
-    await StorageService.deleteUser();
+    await SecureStorageService.deleteToken();
     currentUser.value = null;
     Get.offAll(() => const OnboardingScreen());
   }
@@ -101,12 +98,17 @@ class AuthController extends GetxController {
     final token = responseData['token'];
     final userData = responseData['user'];
 
-    await StorageService.saveToken(token);
+    await SecureStorageService.saveToken(token);
     final user = UserModel.fromJson(userData);
-    await StorageService.saveUser(user);
     currentUser.value = user;
-
-
     SBRedirectToDashboard.getDashboardBasedOnRole(currentUser.value!.role);
+  }
+
+  // function to handle autoLogin error or not user already logged
+  void _handleAuthFailure() async {
+    isLoading.value = false;
+    await SecureStorageService.deleteToken();
+    currentUser.value = null;
+    Get.to(const OnboardingScreen());
   }
 }

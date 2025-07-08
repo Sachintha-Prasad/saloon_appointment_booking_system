@@ -22,7 +22,7 @@ class AboutUs extends StatelessWidget {
           children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(SBSizes.borderRadiusLg),
-                child: Image.asset(SBImages.clientAboutImage, width: double.infinity, fit: BoxFit.cover,)
+                child: Image.asset(SBImages.clientAboutImage, width: double.infinity, fit: BoxFit.cover)
             ),
             Positioned(
                 bottom: 0,
