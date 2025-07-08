@@ -78,8 +78,7 @@ class AppointmentBookingScreen extends StatelessWidget {
 
             Obx(() {
               final selectedStylist = userController.selectedStylist.value;
-              // debugPrint(
-              //     "Selected Stylist: ${selectedStylist?.name ?? 'None'}");
+              // debugPrint("Selected Stylist: ${userController.availableSlots}");
 
               if (selectedStylist == null) {
                 return const EmptyPlaceholder(

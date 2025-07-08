@@ -23,7 +23,6 @@ class UserController extends GetxController {
   final RxList<int> availableSlots = <int>[].obs;
   final RxnInt selectedTimeSlot = RxnInt();
 
-
   // method to update the selected date and fetch available stylists
   void updateSelectedDate(DateTime date) {
     selectedDate.value = date;
@@ -35,18 +34,21 @@ class UserController extends GetxController {
   Future<List<UserModel>> fetchAvailableStylistList(String date) async {
     try {
       isLoading.value = true;
-      final responseData = await apiService.authenticatedGet(
-          "users/available-stylists?date=$date");
+      final responseData = await apiService
+          .authenticatedGet("users/available-stylists?date=$date");
 
       if (responseData.statusCode == 200) {
         isLoading.value = false;
-        final jsonResponse = jsonDecode(responseData.body) as Map<String, dynamic>;
+        final jsonResponse =
+            jsonDecode(responseData.body) as Map<String, dynamic>;
 
         // extract the list using the correct key from API response
         final List<dynamic> jsonList = jsonResponse["availableStylists"] ?? [];
 
-        final List<UserModel> stylistsList = jsonList.map((dynamic data) =>
-            UserModel.fromJson(data as Map<String, dynamic>)).toList();
+        final List<UserModel> stylistsList = jsonList
+            .map((dynamic data) =>
+                UserModel.fromJson(data as Map<String, dynamic>))
+            .toList();
         stylistList.assignAll(stylistsList);
 
         // select the first stylist when date change
@@ -68,18 +70,22 @@ class UserController extends GetxController {
 
   // fetch available time slots
   Future<void> fetchAvailableTimeSlots(String date, String? stylistId) async {
-    if(stylistId == null) return;
+    if (stylistId == null) return;
 
     try {
       isLoading.value = true;
       final responseData = await apiService.authenticatedGet(
           "appointments/available-slots?stylistId=$stylistId&date=$date");
+      // debugPrint("response: ${responseData.body}");
 
       if (responseData.statusCode == 200) {
-        final jsonResponse = jsonDecode(responseData.body) as Map<String, dynamic>;
+        final jsonResponse =
+            jsonDecode(responseData.body) as Map<String, dynamic>;
+
         final slots = List<int>.from(jsonResponse["availableSlots"] ?? []);
 
         availableSlots.assignAll(slots);
+        debugPrint("Available Slots: $availableSlots");
       } else {
         availableSlots.value = [];
         final errorResponse = jsonDecode(responseData.body);
