@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
 import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
+import 'package:saloon_appointment_booking_system/screens/client/profile/profile/widgets/client_profile_menu_item.dart';
+import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
 
 class StylistDashboard extends StatelessWidget {
@@ -45,6 +47,14 @@ class StylistDashboard extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 16),
+                  ClientProfileMenuItem(
+                    itemText: "Log Out",
+                    prefixIcon: Icons.logout_outlined,
+                    prefixIconColor: SBColors.red,
+                    isTrailingIconVisible: false,
+                    textColor: SBColors.red,
+                    onTap: () => authController.logout(),
+                  ),
                 ],
               )),
         ),
