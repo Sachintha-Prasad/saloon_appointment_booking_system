@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
@@ -17,6 +16,8 @@ class UserController extends GetxController {
   final ApiService apiService = Get.find<ApiService>();
 
   final RxBool isLoading = true.obs;
+  final RxBool isBookingAppointment =
+      false.obs; // Add this for booking loading state
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   final RxList<UserModel> stylistList = <UserModel>[].obs;
   final Rxn<UserModel> selectedStylist = Rxn<UserModel>();
@@ -76,7 +77,6 @@ class UserController extends GetxController {
       isLoading.value = true;
       final responseData = await apiService.authenticatedGet(
           "appointments/available-slots?stylistId=$stylistId&date=$date");
-      // debugPrint("response: ${responseData.body}");
 
       if (responseData.statusCode == 200) {
         final jsonResponse =
@@ -103,5 +103,50 @@ class UserController extends GetxController {
   // select a time slot
   Future<void> selectTimeSlot(int slotNo) async {
     selectedTimeSlot.value = slotNo;
+  }
+
+  //  Create appointment
+  Future<bool> createAppointment({
+    required String clientId,
+    required String stylistId,
+    required String date,
+    required int slotNumber,
+  }) async {
+    try {
+      isBookingAppointment.value = true;
+
+      final appointmentData = {
+        "clientId": clientId,
+        "stylistId": stylistId,
+        "date": date,
+        "slotNumber": slotNumber,
+      };
+      
+      final responseData = await apiService.authenticatedPost(
+        "appointments/",
+        appointmentData,
+      );
+
+      if (responseData.statusCode == 200 || responseData.statusCode == 201) {
+        debugPrint("Appointment created successfully ");
+
+        // Refresh available slots after successful booking
+        await fetchAvailableTimeSlots(date, stylistId);
+
+        return true;
+      } else {
+        final errorResponse = jsonDecode(responseData.body);
+        SBCustomErrorHandler.handleErrorResponse(
+          errorResponse,
+          "Failed to create appointment",
+        );
+        return false;
+      }
+    } catch (err) {
+      debugPrint("Error creating appointment: $err");
+      return false;
+    } finally {
+      isBookingAppointment.value = false;
+    }
   }
 }

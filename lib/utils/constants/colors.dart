@@ -28,6 +28,7 @@ class SBColors {
   static const Color secondaryButton = Color(0xFFBDBDBD);
   static const Color borderedButton = Colors.transparent;
   static const Color dangerButton = Color(0xFFB00020);
+  static const Color transparentButton = Color.fromARGB(255, 6, 72, 90);
 
   // input field colors
   static const Color inputFieldBgLight = Color.fromRGBO(240, 243, 246, 0);
