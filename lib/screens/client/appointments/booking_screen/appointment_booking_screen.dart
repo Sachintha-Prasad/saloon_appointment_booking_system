@@ -177,21 +177,9 @@ class AppointmentBookingScreen extends StatelessWidget {
                                 if (success) {
                                   // Close the bottom sheet
                                   Navigator.pop(context);
-                                  SBHelperFunctions.showSuccessSnackbar(
-                                      'Appointment booked successfully!');
                                   // Show success message
-                                  Get.snackbar(
-                                    'Success',
-                                    'Appointment booked successfully!',
-                                    snackPosition: SnackPosition.BOTTOM,
-                                    backgroundColor: SBColors.transparentButton,
-                                    colorText: SBColors.white,
-                                    borderRadius: 12,
-                                    margin: const EdgeInsets.all(16),
-                                    icon: const Icon(Icons.check_circle,
-                                        color: SBColors.white),
-                                    duration: const Duration(seconds: 3),
-                                  );
+                                  SBHelperFunctions.showDarkSnackbar(
+                                      'Appointment booked successfully!');
 
                                   // Update selected time slot
                                   userController.selectTimeSlot(slotNo);
