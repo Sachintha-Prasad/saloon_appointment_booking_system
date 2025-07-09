@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
 import 'package:saloon_appointment_booking_system/common/widgets/empty_placeholder.dart';
 import 'package:saloon_appointment_booking_system/common/widgets/section_title.dart';
+import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/controllers/user_controller.dart';
 import 'package:saloon_appointment_booking_system/data/time_slots/time_slots_data.dart';
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
@@ -17,12 +18,277 @@ import 'package:skeletonizer/skeletonizer.dart';
 class AppointmentBookingScreen extends StatelessWidget {
   const AppointmentBookingScreen({super.key});
 
+  void _showConfirmationBottomSheet(
+      BuildContext context, UserController userController, int slotNo) {
+    final slot = TimeSlotsData.data.firstWhere((s) => s['slotNo'] == slotNo);
+    final selectedStylist = userController.selectedStylist.value;
+    final selectedDate =
+        SBHelperFunctions.convertDate(userController.selectedDate.value);
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFF1E1E1E), // Dark background
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Handle bar
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[600], // Darker handle bar
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Title
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: SBColors.primary.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.schedule,
+                    color: SBColors.primary,
+                    size: 24,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                const Text(
+                  'Confirm Appointment',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white, // White text for dark theme
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24),
+
+            // Appointment Details Card
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF2A2A2A), // Dark card background
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.grey[700]!), // Darker border
+              ),
+              child: Column(
+                children: [
+                  _buildDetailRow(
+                    icon: Icons.person,
+                    label: 'Stylist',
+                    value: selectedStylist?.name ?? 'Unknown',
+                  ),
+                  const SizedBox(height: 12),
+                  _buildDetailRow(
+                    icon: Icons.calendar_today,
+                    label: 'Date',
+                    value: selectedDate,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildDetailRow(
+                    icon: Icons.access_time,
+                    label: 'Time',
+                    value: '${slot['startTime']} - ${slot['endTime']}',
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // Buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      side:
+                          BorderSide(color: Colors.grey[600]!), // Darker border
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Cancel',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                // Replace the existing ElevatedButton in your _showConfirmationBottomSheet method with this:
+
+                Expanded(
+                  child: Obx(() => ElevatedButton(
+                        onPressed: userController.isBookingAppointment.value
+                            ? null
+                            : () async {
+                                // Get the current user ID from AuthController
+                                final AuthController authController =
+                                    Get.find<AuthController>();
+                                final clientId =
+                                    authController.currentUser.value?.id;
+
+                                if (clientId == null) {
+                                  Get.snackbar(
+                                    'Error',
+                                    'User not logged in. Please login again.',
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    backgroundColor: Colors.red,
+                                    colorText: Colors.white,
+                                    borderRadius: 12,
+                                    margin: const EdgeInsets.all(16),
+                                    icon: const Icon(Icons.error,
+                                        color: Colors.white),
+                                    duration: const Duration(seconds: 3),
+                                  );
+                                  return;
+                                }
+
+                                final success =
+                                    await userController.createAppointment(
+                                  clientId: clientId,
+                                  stylistId: selectedStylist!.id!,
+                                  date: SBHelperFunctions.convertDate(
+                                      userController.selectedDate.value),
+                                  slotNumber: slotNo,
+                                );
+
+                                if (success) {
+                                  // Close the bottom sheet
+                                  Navigator.pop(context);
+                                  // Show success message
+                                  SBHelperFunctions.showDarkSnackbar(
+                                      'Appointment booked successfully!');
+
+                                  // Update selected time slot
+                                  userController.selectTimeSlot(slotNo);
+                                } else {
+                                  // Show error message
+                                  Get.snackbar(
+                                    'Error',
+                                    'Failed to book appointment. Please try again.',
+                                    snackPosition: SnackPosition.BOTTOM,
+                                    backgroundColor: Colors.red,
+                                    colorText: Colors.white,
+                                    borderRadius: 12,
+                                    margin: const EdgeInsets.all(16),
+                                    icon: const Icon(Icons.error,
+                                        color: Colors.white),
+                                    duration: const Duration(seconds: 3),
+                                  );
+                                }
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: SBColors.primary,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: userController.isBookingAppointment.value
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                ),
+                              )
+                            : const Text(
+                                'Confirm',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                      )),
+                ),
+              ],
+            ),
+
+            // Bottom safe area
+            SizedBox(height: MediaQuery.of(context).padding.bottom),
+          ],
+        ),
+      ),
+    );
+  }
+
+//Helper method to build detail rows in the confirmation card
+  Widget _buildDetailRow({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 20,
+          color: SBColors.primary,
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[400], // Lighter grey for dark theme
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white, // White text for dark theme
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final UserController userController = Get.put(UserController());
 
     final selectedDate =
         SBHelperFunctions.convertDate(userController.selectedDate.value);
+
+    const Color activeSlotColor = SBColors.primary;
+    const Color inactiveSlotBgColor = Color.fromARGB(47, 218, 246, 255);
+    const Color inactiveSlotTextColor = Color.fromARGB(148, 255, 255, 255);
 
     return SingleChildScrollView(
       child: Padding(
@@ -88,7 +354,8 @@ class AppointmentBookingScreen extends StatelessWidget {
               final selectedSlot = userController.selectedTimeSlot.value;
 
               if (availableSlots.isEmpty) {
-                return const EmptyPlaceholder(placeholderText: "No slots available");
+                return const EmptyPlaceholder(
+                    placeholderText: "No slots available");
               }
 
               return Skeletonizer(
@@ -103,51 +370,62 @@ class AppointmentBookingScreen extends StatelessWidget {
                     final isAvailable = availableSlots.contains(slotNo);
                     final isSelected = selectedSlot == slotNo;
 
-                    return userController.isLoading.value ?
-                    const TimeSlotCardSkeleton():
-                    GestureDetector(
-                      onTap: isAvailable
-                          ? () => userController.selectTimeSlot(slotNo)
-                          : null,
-                      child: Opacity(
-                        opacity: isAvailable ? 1.0 : 0.5,
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: isAvailable
-                                ? SBColors.primary
-                                : Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: isAvailable
-                                  ? SBColors.primary
-                                  : Colors.grey.shade300,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '${slot['startTime']} - ${slot['endTime']}',
-                                style: TextStyle(
-                                  color: isAvailable
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                    return userController.isLoading.value
+                        ? const TimeSlotCardSkeleton()
+                        : GestureDetector(
+                            onTap: isAvailable
+                                ? () => _showConfirmationBottomSheet(
+                                    context, userController, slotNo)
+                                : null, // Disable tap for unavailable slots
+                            child: Container(
+                              margin: const EdgeInsets.only(bottom: 12),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: isAvailable
+                                    ? activeSlotColor
+                                    : inactiveSlotBgColor,
+                                borderRadius: BorderRadius.circular(12),
+                                border: isAvailable
+                                    ? Border.all(color: activeSlotColor)
+                                    : Border.all(
+                                        color: const Color.fromARGB(
+                                            0, 0, 132, 172)),
+                                boxShadow: isAvailable
+                                    ? [
+                                        BoxShadow(
+                                          color:
+                                              activeSlotColor.withOpacity(0.3),
+                                          spreadRadius: 2,
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 3),
+                                        ),
+                                      ]
+                                    : null,
                               ),
-                              if (isSelected && isAvailable)
-                                const Icon(Icons.check_circle,
-                                    color: Colors.white),
-                              if (!isAvailable)
-                                const Icon(Icons.lock, color: Colors.grey),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${slot['startTime']} - ${slot['endTime']}',
+                                    style: TextStyle(
+                                      color: isAvailable
+                                          ? Colors.white
+                                          : inactiveSlotTextColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  // if (isSelected && isAvailable)
+                                  //   const Icon(Icons.check_circle,
+                                  //       color: Colors.white),
+                                  if (!isAvailable)
+                                    Icon(Icons.block,
+                                        color: inactiveSlotTextColor),
+                                ],
+                              ),
+                            ),
+                          );
                   },
                 ),
               );

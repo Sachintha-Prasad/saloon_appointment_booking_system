@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
@@ -17,12 +16,13 @@ class UserController extends GetxController {
   final ApiService apiService = Get.find<ApiService>();
 
   final RxBool isLoading = true.obs;
+  final RxBool isBookingAppointment =
+      false.obs; // Add this for booking loading state
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   final RxList<UserModel> stylistList = <UserModel>[].obs;
   final Rxn<UserModel> selectedStylist = Rxn<UserModel>();
   final RxList<int> availableSlots = <int>[].obs;
   final RxnInt selectedTimeSlot = RxnInt();
-
 
   // method to update the selected date and fetch available stylists
   void updateSelectedDate(DateTime date) {
@@ -35,18 +35,21 @@ class UserController extends GetxController {
   Future<List<UserModel>> fetchAvailableStylistList(String date) async {
     try {
       isLoading.value = true;
-      final responseData = await apiService.authenticatedGet(
-          "users/available-stylists?date=$date");
+      final responseData = await apiService
+          .authenticatedGet("users/available-stylists?date=$date");
 
       if (responseData.statusCode == 200) {
         isLoading.value = false;
-        final jsonResponse = jsonDecode(responseData.body) as Map<String, dynamic>;
+        final jsonResponse =
+            jsonDecode(responseData.body) as Map<String, dynamic>;
 
         // extract the list using the correct key from API response
         final List<dynamic> jsonList = jsonResponse["availableStylists"] ?? [];
 
-        final List<UserModel> stylistsList = jsonList.map((dynamic data) =>
-            UserModel.fromJson(data as Map<String, dynamic>)).toList();
+        final List<UserModel> stylistsList = jsonList
+            .map((dynamic data) =>
+                UserModel.fromJson(data as Map<String, dynamic>))
+            .toList();
         stylistList.assignAll(stylistsList);
 
         // select the first stylist when date change
@@ -68,7 +71,7 @@ class UserController extends GetxController {
 
   // fetch available time slots
   Future<void> fetchAvailableTimeSlots(String date, String? stylistId) async {
-    if(stylistId == null) return;
+    if (stylistId == null) return;
 
     try {
       isLoading.value = true;
@@ -76,10 +79,13 @@ class UserController extends GetxController {
           "appointments/available-slots?stylistId=$stylistId&date=$date");
 
       if (responseData.statusCode == 200) {
-        final jsonResponse = jsonDecode(responseData.body) as Map<String, dynamic>;
+        final jsonResponse =
+            jsonDecode(responseData.body) as Map<String, dynamic>;
+
         final slots = List<int>.from(jsonResponse["availableSlots"] ?? []);
 
         availableSlots.assignAll(slots);
+        debugPrint("Available Slots: $availableSlots");
       } else {
         availableSlots.value = [];
         final errorResponse = jsonDecode(responseData.body);
@@ -97,5 +103,50 @@ class UserController extends GetxController {
   // select a time slot
   Future<void> selectTimeSlot(int slotNo) async {
     selectedTimeSlot.value = slotNo;
+  }
+
+  //  Create appointment
+  Future<bool> createAppointment({
+    required String clientId,
+    required String stylistId,
+    required String date,
+    required int slotNumber,
+  }) async {
+    try {
+      isBookingAppointment.value = true;
+
+      final appointmentData = {
+        "clientId": clientId,
+        "stylistId": stylistId,
+        "date": date,
+        "slotNumber": slotNumber,
+      };
+      
+      final responseData = await apiService.authenticatedPost(
+        "appointments/",
+        appointmentData,
+      );
+
+      if (responseData.statusCode == 200 || responseData.statusCode == 201) {
+        debugPrint("Appointment created successfully ");
+
+        // Refresh available slots after successful booking
+        await fetchAvailableTimeSlots(date, stylistId);
+
+        return true;
+      } else {
+        final errorResponse = jsonDecode(responseData.body);
+        SBCustomErrorHandler.handleErrorResponse(
+          errorResponse,
+          "Failed to create appointment",
+        );
+        return false;
+      }
+    } catch (err) {
+      debugPrint("Error creating appointment: $err");
+      return false;
+    } finally {
+      isBookingAppointment.value = false;
+    }
   }
 }

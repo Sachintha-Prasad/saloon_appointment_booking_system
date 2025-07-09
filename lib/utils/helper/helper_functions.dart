@@ -21,10 +21,9 @@ class SBHelperFunctions {
   }
 
   // function to convert date into YYYY-MM-DD format=========================================================================================
-  static String convertDate(DateTime date){
+  static String convertDate(DateTime date) {
     return date.toIso8601String().split("T")[0];
   }
-
 
   // function to get avatar characters when there is no profile img==========================================================================
   static String getAvatarLetters(String name) {
@@ -34,10 +33,13 @@ class SBHelperFunctions {
     List<String> nameParts = name.split(' ');
 
     // get the first letter of the first name
-    String firstLetter = nameParts[0].isNotEmpty ? nameParts[0][0].toUpperCase() : "";
+    String firstLetter =
+        nameParts[0].isNotEmpty ? nameParts[0][0].toUpperCase() : "";
 
     // get the first letter of the last name (if it exists)
-    String lastLetter = nameParts.length > 1 && nameParts[1].isNotEmpty ? nameParts[1][0].toUpperCase() : "";
+    String lastLetter = nameParts.length > 1 && nameParts[1].isNotEmpty
+        ? nameParts[1][0].toUpperCase()
+        : "";
 
     // combine both letters
     return firstLetter + lastLetter;
@@ -80,6 +82,22 @@ class SBHelperFunctions {
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: SBColors.errorColor.withOpacity(0.1),
       colorText: SBColors.errorColor,
+    );
+    return null;
+  }
+
+  // show dark snackbar
+  static Future<void>? showDarkSnackbar(String message) {
+    Get.snackbar(
+      'Success',
+      message,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: SBColors.transparentButton,
+      colorText: SBColors.white,
+      borderRadius: 12,
+      margin: const EdgeInsets.all(16),
+      icon: const Icon(Icons.check_circle, color: SBColors.white),
+      duration: const Duration(seconds: 3),
     );
     return null;
   }
