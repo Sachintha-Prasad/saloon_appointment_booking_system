@@ -120,12 +120,18 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
           BoxShadow(
             color: isDarkMode
                 ? Colors.black.withOpacity(0.2)
-                : Colors.grey.withOpacity(0.1),
+                : const Color.fromARGB(255, 117, 117, 117).withOpacity(0.1),
             spreadRadius: 0,
             blurRadius: 20,
             offset: const Offset(0, 4),
           ),
         ],
+        border: Border.all(
+          color: isDarkMode
+              ? Colors.grey[700]!
+              : const Color.fromARGB(42, 0, 132, 172),
+          width: 1,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -180,7 +186,7 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
                   child: Text(
                     'Pending',
                     style: TextStyle(
-                      color: isDarkMode ? SBColors.white : Colors.white30,
+                      color: SBColors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
                     ),
