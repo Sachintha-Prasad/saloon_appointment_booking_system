@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
 import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/controllers/user_controller.dart';
 import 'package:saloon_appointment_booking_system/data/time_slots/time_slots_data.dart';
+import 'package:saloon_appointment_booking_system/screens/client/home/widgets/status_chip.dart';
 import 'package:saloon_appointment_booking_system/services/api_service.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/error_handlers/custom_error_handler.dart';
@@ -42,7 +44,6 @@ class _AppointmentApprovedTabState extends State<AppointmentApprovedTab> {
       final response = await apiService.authenticatedGet(
         "appointments/approved?clientId=$clientId",
       );
-      debugPrint("Response: ${response.body}");
 
       if (response.statusCode == 200) {
         final List<dynamic> appointments = jsonDecode(response.body);
@@ -109,11 +110,12 @@ class _AppointmentApprovedTabState extends State<AppointmentApprovedTab> {
         DateTime.tryParse(appointment['date'] ?? '') ?? DateTime.now();
     final String formattedDate = DateFormat('MMM dd, yyyy').format(parsedDate);
     final String timeSlot = _formatTimeSlot(appointment);
+    final String status = appointment['status'] ?? 'Approved';
 
     return Padding(
       padding: const EdgeInsets.only(top: 12),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: isDarkMode ? Colors.grey[850] : Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -121,7 +123,7 @@ class _AppointmentApprovedTabState extends State<AppointmentApprovedTab> {
             BoxShadow(
               color: isDarkMode
                   ? Colors.black.withOpacity(0.2)
-                  : Colors.grey.withOpacity(0.1),
+                  : const Color.fromARGB(255, 117, 117, 117).withOpacity(0.1),
               spreadRadius: 0,
               blurRadius: 20,
               offset: const Offset(0, 4),
@@ -177,26 +179,9 @@ class _AppointmentApprovedTabState extends State<AppointmentApprovedTab> {
                       ],
                     ),
                   ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color:
-                          _getStatusColor(appointment['status'] ?? 'accepted'),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      'Approved',
-                      style: TextStyle(
-                        color: SBColors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
+                  _buildStatusChip(status),
                 ],
               ),
-              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -204,17 +189,24 @@ class _AppointmentApprovedTabState extends State<AppointmentApprovedTab> {
     );
   }
 
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'accepted':
-        return const Color.fromARGB(255, 59, 125, 60);
-      case 'pending':
-        return const Color.fromARGB(255, 243, 162, 41);
-      case 'cancelled':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
+  Widget _buildStatusChip(String status) {
+    // return GradientStatusChip(
+    //   status: status,
+    //   fontSize: 11,
+    //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+    //   borderRadius: 12,
+    //   showIcon: true,
+    //   iconSize: 12,
+    // );
+    return OutlinedStatusChip(
+      status: status,
+      fontSize: 11,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      borderRadius: 12,
+      showIcon: true,
+      iconSize: 12,
+      borderWidth: 1,
+    );
   }
 
   @override
@@ -224,10 +216,30 @@ class _AppointmentApprovedTabState extends State<AppointmentApprovedTab> {
         : errorMessage != null
             ? Center(child: Text(errorMessage!))
             : approvedAppointments.isEmpty
-                ? const Center(child: Text("No approved appointments."))
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.calendar_today,
+                          size: 64,
+                          color: Colors.grey.withOpacity(0.6),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          "No approved appointments.",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.withOpacity(0.8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 : RefreshIndicator(
                     onRefresh: fetchApprovedAppointments,
                     child: ListView.builder(
+                      padding: const EdgeInsets.only(top: 16, bottom: 16),
                       itemCount: approvedAppointments.length,
                       itemBuilder: (context, index) =>
                           buildAppointmentCard(approvedAppointments[index]),
