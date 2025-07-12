@@ -1,37 +1,35 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
 import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/controllers/user_controller.dart';
 import 'package:saloon_appointment_booking_system/data/time_slots/time_slots_data.dart';
 import 'package:saloon_appointment_booking_system/services/api_service.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/error_handlers/custom_error_handler.dart';
-// import 'package:saloon_appointment_booking_system/utils/helpers/time_slots_data.dart';
 import 'package:intl/intl.dart';
 
-class AppointmentPendingTab extends StatefulWidget {
-  const AppointmentPendingTab({super.key});
+class AppointmentApprovedTab extends StatefulWidget {
+  const AppointmentApprovedTab({super.key});
 
   @override
-  State<AppointmentPendingTab> createState() => _AppointmentPendingTabState();
+  State<AppointmentApprovedTab> createState() => _AppointmentApprovedTabState();
 }
 
-class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
+class _AppointmentApprovedTabState extends State<AppointmentApprovedTab> {
   final ApiService apiService = Get.find<ApiService>();
 
-  List<Map<String, dynamic>> pendingAppointments = [];
+  List<Map<String, dynamic>> approvedAppointments = [];
   bool isLoading = false;
   String? errorMessage;
 
   @override
   void initState() {
     super.initState();
-    fetchPendingAppointments();
+    fetchApprovedAppointments();
   }
 
-  Future<void> fetchPendingAppointments() async {
+  Future<void> fetchApprovedAppointments() async {
     setState(() {
       isLoading = true;
       errorMessage = null;
@@ -42,14 +40,15 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
       final clientId = authController.currentUser.value?.id;
 
       final response = await apiService.authenticatedGet(
-        "appointments/pending?clientId=$clientId",
+        "appointments/approved?clientId=$clientId",
       );
+      debugPrint("Response: ${response.body}");
 
       if (response.statusCode == 200) {
         final List<dynamic> appointments = jsonDecode(response.body);
 
         setState(() {
-          pendingAppointments = appointments.cast<Map<String, dynamic>>();
+          approvedAppointments = appointments.cast<Map<String, dynamic>>();
         });
       } else {
         final error = jsonDecode(response.body);
@@ -57,7 +56,6 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
         setState(() {
           errorMessage = error['message'] ?? "Failed to fetch data";
         });
-        debugPrint(errorMessage);
       }
     } catch (e) {
       setState(() {
@@ -123,7 +121,7 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
             BoxShadow(
               color: isDarkMode
                   ? Colors.black.withOpacity(0.2)
-                  : const Color.fromARGB(255, 117, 117, 117).withOpacity(0.1),
+                  : Colors.grey.withOpacity(0.1),
               spreadRadius: 0,
               blurRadius: 20,
               offset: const Offset(0, 4),
@@ -184,11 +182,11 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color:
-                          _getStatusColor(appointment['status'] ?? 'Pending'),
+                          _getStatusColor(appointment['status'] ?? 'accepted'),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      'Pending',
+                      'Approved',
                       style: TextStyle(
                         color: SBColors.white,
                         fontSize: 12,
@@ -208,8 +206,8 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
 
   Color _getStatusColor(String status) {
     switch (status.toLowerCase()) {
-      case 'approved':
-        return Colors.green;
+      case 'accepted':
+        return const Color.fromARGB(255, 59, 125, 60);
       case 'pending':
         return const Color.fromARGB(255, 243, 162, 41);
       case 'cancelled':
@@ -225,14 +223,14 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
         ? const Center(child: CircularProgressIndicator())
         : errorMessage != null
             ? Center(child: Text(errorMessage!))
-            : pendingAppointments.isEmpty
-                ? const Center(child: Text("No pending appointments."))
+            : approvedAppointments.isEmpty
+                ? const Center(child: Text("No approved appointments."))
                 : RefreshIndicator(
-                    onRefresh: fetchPendingAppointments,
+                    onRefresh: fetchApprovedAppointments,
                     child: ListView.builder(
-                      itemCount: pendingAppointments.length,
+                      itemCount: approvedAppointments.length,
                       itemBuilder: (context, index) =>
-                          buildAppointmentCard(pendingAppointments[index]),
+                          buildAppointmentCard(approvedAppointments[index]),
                     ),
                   );
   }

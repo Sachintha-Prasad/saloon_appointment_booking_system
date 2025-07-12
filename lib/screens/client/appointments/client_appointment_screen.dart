@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:saloon_appointment_booking_system/screens/client/appointments/booking_screen/tabs/appointment_booking_screen.dart';
+import 'package:saloon_appointment_booking_system/screens/client/appointments/booking_screen/tabs/approved_page.dart';
 import 'package:saloon_appointment_booking_system/screens/client/appointments/booking_screen/tabs/pending_page.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
@@ -35,8 +36,8 @@ class ClientAppointmentScreen extends StatelessWidget {
           body: TabBarView(
             children: [
               const AppointmentBookingScreen(),
-              const AppointmentPendingTab(), // <- Add pending tab
-              Container(), // Approved tab placeholder
+              const AppointmentPendingTab(),
+              const AppointmentApprovedTab(),
             ],
           )),
     );
