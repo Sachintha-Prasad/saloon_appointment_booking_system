@@ -240,6 +240,13 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
                   )
                 : RefreshIndicator(
                     onRefresh: fetchPendingAppointments,
+                    color: SBColors.primary, // Use your app's primary color
+                    backgroundColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[850]
+                            : Colors.white,
+                    strokeWidth: 2.5,
+                    displacement: 40.0,
                     child: ListView.builder(
                       padding: const EdgeInsets.only(top: 16, bottom: 16),
                       itemCount: pendingAppointments.length,
