@@ -18,8 +18,10 @@ import 'package:skeletonizer/skeletonizer.dart';
 class AppointmentBookingScreen extends StatelessWidget {
   const AppointmentBookingScreen({super.key});
 
+// Show confirmation bottom sheet when a time slot is selected
   void _showConfirmationBottomSheet(
       BuildContext context, UserController userController, int slotNo) {
+    final bool isDarkMode = SBHelperFunctions.isDarkMode(context);
     final slot = TimeSlotsData.data.firstWhere((s) => s['slotNo'] == slotNo);
     final selectedStylist = userController.selectedStylist.value;
     final selectedDate =
@@ -30,9 +32,11 @@ class AppointmentBookingScreen extends StatelessWidget {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        decoration: const BoxDecoration(
-          color: Color(0xFF1E1E1E), // Dark background
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        decoration: BoxDecoration(
+          color: isDarkMode
+              ? const Color(0xFF1E1E1E)
+              : SBColors.darkModeInactiveSlotBgColor, // Dark background
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -52,7 +56,6 @@ class AppointmentBookingScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Title
             Row(
               children: [
                 Container(
@@ -68,12 +71,14 @@ class AppointmentBookingScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                const Text(
+                Text(
                   'Confirm Appointment',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white, // White text for dark theme
+                    color: isDarkMode
+                        ? SBColors.white
+                        : SBColors.primary, // White text for dark theme
                   ),
                 ),
               ],
@@ -84,29 +89,34 @@ class AppointmentBookingScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF2A2A2A), // Dark card background
+                color: isDarkMode
+                    ? const Color(0xFF2A2A2A)
+                    : SBColors.white, // Dark card background
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey[700]!), // Darker border
+                border: Border.all(
+                    color: isDarkMode
+                        ? Colors.grey[700]!
+                        : SBColors.primary), // Darker border
               ),
               child: Column(
                 children: [
                   _buildDetailRow(
-                    icon: Icons.person,
-                    label: 'Stylist',
-                    value: selectedStylist?.name ?? 'Unknown',
-                  ),
+                      icon: Icons.person,
+                      label: 'Stylist',
+                      value: selectedStylist?.name ?? 'Unknown',
+                      isDarkMode: isDarkMode),
                   const SizedBox(height: 12),
                   _buildDetailRow(
-                    icon: Icons.calendar_today,
-                    label: 'Date',
-                    value: selectedDate,
-                  ),
+                      icon: Icons.calendar_today,
+                      label: 'Date',
+                      value: selectedDate,
+                      isDarkMode: isDarkMode),
                   const SizedBox(height: 12),
                   _buildDetailRow(
-                    icon: Icons.access_time,
-                    label: 'Time',
-                    value: '${slot['startTime']} - ${slot['endTime']}',
-                  ),
+                      icon: Icons.access_time,
+                      label: 'Time',
+                      value: '${slot['startTime']} - ${slot['endTime']}',
+                      isDarkMode: isDarkMode),
                 ],
               ),
             ),
@@ -136,8 +146,6 @@ class AppointmentBookingScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                // Replace the existing ElevatedButton in your _showConfirmationBottomSheet method with this:
-
                 Expanded(
                   child: Obx(() => ElevatedButton(
                         onPressed: userController.isBookingAppointment.value
@@ -238,11 +246,11 @@ class AppointmentBookingScreen extends StatelessWidget {
   }
 
 //Helper method to build detail rows in the confirmation card
-  Widget _buildDetailRow({
-    required IconData icon,
-    required String label,
-    required String value,
-  }) {
+  Widget _buildDetailRow(
+      {required IconData icon,
+      required String label,
+      required String value,
+      required bool isDarkMode}) {
     return Row(
       children: [
         Icon(
@@ -259,17 +267,17 @@ class AppointmentBookingScreen extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey[400], // Lighter grey for dark theme
+                  color: isDarkMode ? Colors.grey[400] : Colors.black,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
                 value,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white, // White text for dark theme
+                  color: isDarkMode ? Colors.white : Colors.black,
                 ),
               ),
             ],
@@ -339,6 +347,7 @@ class AppointmentBookingScreen extends StatelessWidget {
             const SizedBox(height: SBSizes.spaceBtwSections),
 
             // Available Time Slots ==========================================================
+
             const SectionTitle(title: "Available time slots"),
             const SizedBox(height: SBSizes.spaceBtwItems),
 
@@ -370,6 +379,9 @@ class AppointmentBookingScreen extends StatelessWidget {
                     final isAvailable = availableSlots.contains(slotNo);
                     final isSelected = selectedSlot == slotNo;
 
+                    final bool isDarkMode =
+                        SBHelperFunctions.isDarkMode(context);
+
                     return userController.isLoading.value
                         ? const TimeSlotCardSkeleton()
                         : GestureDetector(
@@ -384,13 +396,17 @@ class AppointmentBookingScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: isAvailable
                                     ? activeSlotColor
-                                    : inactiveSlotBgColor,
+                                    : (isDarkMode
+                                        ? inactiveSlotBgColor
+                                        : SBColors.darkModeInactiveSlotBgColor),
                                 borderRadius: BorderRadius.circular(12),
                                 border: isAvailable
                                     ? Border.all(color: activeSlotColor)
                                     : Border.all(
-                                        color: const Color.fromARGB(
-                                            0, 0, 132, 172)),
+                                        color: isDarkMode
+                                            ? inactiveSlotTextColor
+                                            : SBColors
+                                                .darkModeInactiveSlotTextColor),
                                 boxShadow: isAvailable
                                     ? [
                                         BoxShadow(
@@ -401,7 +417,17 @@ class AppointmentBookingScreen extends StatelessWidget {
                                           offset: const Offset(0, 3),
                                         ),
                                       ]
-                                    : null,
+                                    : (isDarkMode
+                                        ? [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.black.withOpacity(0.2),
+                                              spreadRadius: 1,
+                                              blurRadius: 3,
+                                              offset: const Offset(0, 1),
+                                            ),
+                                          ]
+                                        : null),
                               ),
                               child: Row(
                                 mainAxisAlignment:
@@ -412,7 +438,10 @@ class AppointmentBookingScreen extends StatelessWidget {
                                     style: TextStyle(
                                       color: isAvailable
                                           ? Colors.white
-                                          : inactiveSlotTextColor,
+                                          : (isDarkMode
+                                              ? inactiveSlotTextColor // Add this color to your SBColors class
+                                              : SBColors
+                                                  .darkModeInactiveSlotTextColor),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -421,7 +450,11 @@ class AppointmentBookingScreen extends StatelessWidget {
                                   //       color: Colors.white),
                                   if (!isAvailable)
                                     Icon(Icons.block,
-                                        color: inactiveSlotTextColor),
+                                        color: isDarkMode
+                                            ? SBColors
+                                                .darkModeInactiveSlotTextColor // Add this color to your SBColors class
+                                            : SBColors
+                                                .darkModeInactiveSlotTextColor),
                                 ],
                               ),
                             ),
