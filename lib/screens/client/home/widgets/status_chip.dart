@@ -458,7 +458,9 @@ class OutlinedStatusChip extends StatelessWidget {
             const SizedBox(width: 4),
           ],
           Text(
-            status,
+            status.isNotEmpty
+                ? '${status[0].toUpperCase()}${status.substring(1)}'
+                : '',
             style: TextStyle(
               color: color,
               fontSize: fontSize,
