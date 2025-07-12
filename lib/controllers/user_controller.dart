@@ -17,7 +17,7 @@ class UserController extends GetxController {
 
   final RxBool isLoading = true.obs;
   final RxBool isBookingAppointment =
-      false.obs; // Add this for booking loading state
+      false.obs; 
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   final RxList<UserModel> stylistList = <UserModel>[].obs;
   final Rxn<UserModel> selectedStylist = Rxn<UserModel>();

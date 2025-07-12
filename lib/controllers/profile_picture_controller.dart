@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
-import 'package:saloon_appointment_booking_system/models/user_model.dart';
+import 'package:saloon_appointment_booking_system/screens/profile/profile/user_profile_screen.dart';
 import 'package:saloon_appointment_booking_system/services/api_service.dart';
 import 'package:saloon_appointment_booking_system/services/secure_storage_service.dart';
 import 'package:image/image.dart' as img;
@@ -26,6 +26,7 @@ class ProfilePictureController extends GetxController {
   final AuthController authController = Get.find<AuthController>();
 
   final Rxn<File> selectedImage = Rxn<File>();
+  final RxBool isLoading = true.obs;
 
   // pick image from gallery or camera and compress it
   Future<void> pickImage(ImageSource source) async {
@@ -153,7 +154,8 @@ class ProfilePictureController extends GetxController {
 
       if (response.statusCode == 200) {
         SBHelperFunctions.showSuccessSnackbar('profile image updated');
-        authController.currentUser.value = UserModel.fromJson(responseData);
+        await authController.autoLogin();
+        Get.to(UserProfileScreen());
         debugPrint(
             'profile image updated successfully: ${responseData['profileImageUrl']}');
       } else {

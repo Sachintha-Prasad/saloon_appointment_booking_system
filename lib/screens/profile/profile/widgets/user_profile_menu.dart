@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:saloon_appointment_booking_system/screens/client/profile/profile/widgets/client_profile_menu_item.dart';
+import 'package:saloon_appointment_booking_system/screens/profile/profile/widgets/user_profile_menu_item.dart';
 
-class ClientProfileMenu extends StatelessWidget {
-  const ClientProfileMenu({
+class UserProfileMenu extends StatelessWidget {
+  const UserProfileMenu({
     super.key,
   });
 
@@ -11,22 +11,22 @@ class ClientProfileMenu extends StatelessWidget {
     return Column(
       children: [
         // edit profile
-        ClientProfileMenuItem(itemText: "Edit Profile",
+        UserProfileMenuItem(itemText: "Edit Profile",
           prefixIcon: Icons.person_outline,
           onTap: () => {} ,
         ),
         // help
-        ClientProfileMenuItem(itemText: "Help",
+        UserProfileMenuItem(itemText: "Help",
           prefixIcon: Icons.help_outline_outlined,
           onTap: () => {},
         ),
         // privacy policy
-        ClientProfileMenuItem(itemText: "Privacy Policy",
+        UserProfileMenuItem(itemText: "Privacy Policy",
           prefixIcon: Icons.privacy_tip_outlined,
           onTap: () => {},
         ),
         // invite friends
-        ClientProfileMenuItem(itemText: "Invite Friends",
+        UserProfileMenuItem(itemText: "Invite Friends",
           prefixIcon: Icons.groups_outlined,
           onTap: () => {},
         ),

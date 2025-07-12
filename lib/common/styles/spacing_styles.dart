@@ -5,7 +5,7 @@ class SBSpacingStyle {
   SBSpacingStyle._();
 
   static const EdgeInsetsGeometry paddingMainLayout = EdgeInsets.only(
-    top: SBSizes.xs,
+    top: SBSizes.md,
     left: SBSizes.defaultSpace,
     bottom: SBSizes.defaultSpace,
     right: SBSizes.defaultSpace,

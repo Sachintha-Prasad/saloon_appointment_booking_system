@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/common/widgets/theme_toggle_button.dart';
 import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
-import 'package:saloon_appointment_booking_system/screens/client/profile/profile/widgets/client_profile_image.dart';
-import 'package:saloon_appointment_booking_system/screens/client/profile/profile/widgets/client_profile_menu.dart';
-import 'package:saloon_appointment_booking_system/screens/client/profile/profile/widgets/client_profile_menu_item.dart';
+import 'package:saloon_appointment_booking_system/screens/profile/profile/widgets/user_profile_image.dart';
+import 'package:saloon_appointment_booking_system/screens/profile/profile/widgets/user_profile_menu.dart';
+import 'package:saloon_appointment_booking_system/screens/profile/profile/widgets/user_profile_menu_item.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
 
-class ClientProfileScreen extends StatelessWidget {
-  const ClientProfileScreen({super.key});
+class UserProfileScreen extends StatelessWidget {
+  const UserProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class ClientProfileScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     // user profile image
-                    ClientProfileImage(userData: userData),
+                    UserProfileImage(userData: userData),
                     const SizedBox(height: SBSizes.sm),
 
                     // user name
@@ -79,7 +79,7 @@ class ClientProfileScreen extends StatelessWidget {
               const SizedBox(height: SBSizes.spaceBtwSections),
 
               // menu section=================================================================
-              const ClientProfileMenu(),
+              const UserProfileMenu(),
               const SizedBox(height: SBSizes.spaceBtwSections),
 
               // profile divider=============================================================
@@ -87,7 +87,7 @@ class ClientProfileScreen extends StatelessWidget {
               const SizedBox(height: SBSizes.spaceBtwSections),
 
               // log out button===============================================================
-              ClientProfileMenuItem(
+              UserProfileMenuItem(
                 itemText: "Log Out",
                 prefixIcon: Icons.logout_outlined,
                 prefixIconColor: SBColors.red,
