@@ -121,7 +121,7 @@ class UserController extends GetxController {
         "date": date,
         "slotNumber": slotNumber,
       };
-      
+
       final responseData = await apiService.authenticatedPost(
         "appointments/",
         appointmentData,
