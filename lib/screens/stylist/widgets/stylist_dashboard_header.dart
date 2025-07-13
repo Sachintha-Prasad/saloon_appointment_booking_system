@@ -4,8 +4,10 @@ import 'package:saloon_appointment_booking_system/common/widgets/profile_image.d
 import 'package:saloon_appointment_booking_system/models/user_model.dart';
 import 'package:saloon_appointment_booking_system/screens/profile/profile/user_profile_screen.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
+import 'package:saloon_appointment_booking_system/utils/constants/enum.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
 import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
+import 'package:saloon_appointment_booking_system/common/widgets/custom_text_button.dart';
 
 class StylistDashboardHeader extends StatelessWidget {
   final UserModel userData;
@@ -18,7 +20,7 @@ class StylistDashboardHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         ProfileImage(userData: userData),
-        const SizedBox(width: SBSizes.sm),
+        const SizedBox(width: SBSizes.md),
 
         Expanded(
           flex: 7,
@@ -35,20 +37,15 @@ class StylistDashboardHeader extends StatelessWidget {
                 'Stylist',
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: SBColors.darkGrey),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: SBSizes.sm),
               SizedBox(
                 width: double.infinity,
-                child: ElevatedButton(
+                child: CustomTextButton(
+                  btnText: 'View profile',
+                  btnType: ButtonType.primary,
                   onPressed: () {
                     Get.to(() => UserProfileScreen());
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: SBColors.primary,
-                  ),
-                  child: Text(
-                    'Profile',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: SBColors.white),
-                  ),
                 ),
               ),
             ],

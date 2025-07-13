@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
+import 'package:saloon_appointment_booking_system/common/widgets/custom_text_button.dart';
 import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/controllers/stylist_controller.dart';
 import 'package:saloon_appointment_booking_system/screens/stylist/widgets/appointment_request_stat_card.dart';
 import 'package:saloon_appointment_booking_system/screens/stylist/widgets/stylist_dashboard_header.dart';
 import 'package:saloon_appointment_booking_system/screens/stylist/widgets/today_appointment_stat_card.dart';
 import 'package:saloon_appointment_booking_system/screens/stylist/widgets/upcoming_appointments_stat_card.dart';
+import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
+import 'package:saloon_appointment_booking_system/utils/constants/enum.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
+import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
 
 class StylistDashboard extends StatelessWidget {
   const StylistDashboard({super.key});
@@ -57,6 +61,19 @@ class StylistDashboard extends StatelessWidget {
                         child: UpcomingAppointmentsStatCard(stylistController: stylistController),
                       ),
                     ],
+                  ),
+                  const SizedBox(height: SBSizes.spaceBtwSections),
+
+                  Center(
+                    child: CustomTextButton(
+                      btnText: "Request a Leave",
+                      prefixIcon: const Icon(Icons.airplane_ticket_outlined, size: 20, color: SBColors.white),
+                      btnType: ButtonType.primary,
+                      onPressed: () {
+                        // TODO: Implement leave request logic or navigation
+                        Get.snackbar("Leave Request", "Feature coming soon!");
+                      },
+                    ),
                   ),
 
                 ],

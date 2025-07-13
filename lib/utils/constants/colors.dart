@@ -43,9 +43,7 @@ class SBColors {
   static const Color errorColor = Color(0xFFB00020);
 
   // Dark mode colors for time slots
-  static const Color darkModeInactiveSlotBgColor =
-      Color.fromARGB(255, 218, 234, 239);
-  static const Color darkModeInactiveSlotTextColor =
-      Color.fromARGB(255, 176, 176, 176);
+  static const Color darkModeInactiveSlotBgColor = Color.fromARGB(255, 218, 234, 239);
+  static const Color darkModeInactiveSlotTextColor = Color.fromARGB(255, 176, 176, 176);
   static const Color darkModeBorderColor = Color(0xFF404040);
 }
