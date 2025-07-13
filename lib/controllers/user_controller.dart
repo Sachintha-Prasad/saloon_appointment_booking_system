@@ -16,8 +16,7 @@ class UserController extends GetxController {
   final ApiService apiService = Get.find<ApiService>();
 
   final RxBool isLoading = true.obs;
-  final RxBool isBookingAppointment =
-      false.obs; 
+  final RxBool isBookingAppointment = false.obs;
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   final RxList<UserModel> stylistList = <UserModel>[].obs;
   final Rxn<UserModel> selectedStylist = Rxn<UserModel>();
@@ -85,7 +84,7 @@ class UserController extends GetxController {
         final slots = List<int>.from(jsonResponse["availableSlots"] ?? []);
 
         availableSlots.assignAll(slots);
-        debugPrint("Available Slots: $availableSlots");
+        // debugPrint("Available Slots: $availableSlots");
       } else {
         availableSlots.value = [];
         final errorResponse = jsonDecode(responseData.body);
