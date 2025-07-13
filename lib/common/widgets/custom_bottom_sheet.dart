@@ -35,6 +35,7 @@ class CustomBottomSheet extends StatelessWidget {
             child: Container(
               width: 40,
               height: 4,
+              margin: const EdgeInsets.only(bottom: 24),
               decoration: BoxDecoration(
                 color: isDarkMode
                     ? Colors.grey[600]
@@ -43,18 +44,18 @@ class CustomBottomSheet extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 24),
 
-          // User-provided content
+          // User content
           child,
 
-          // Bottom safe area padding for devices with notch etc.
+          // Bottom safe area padding
           SizedBox(height: MediaQuery.of(context).padding.bottom),
         ],
       ),
     );
   }
 
+  /// Show the custom bottom sheet
   static Future<T?> show<T>({
     required Widget child,
     bool isScrollControlled = true,
@@ -68,5 +69,12 @@ class CustomBottomSheet extends StatelessWidget {
         isScrollControlled: isScrollControlled,
       ),
     );
+  }
+
+  /// Close any open bottom sheet (just pops the route)
+  static void close<T extends Object?>([T? result]) {
+    if (Navigator.of(Get.context!).canPop()) {
+      Navigator.of(Get.context!).pop(result);
+    }
   }
 }

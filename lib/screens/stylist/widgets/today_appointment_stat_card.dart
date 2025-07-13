@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/controllers/stylist_controller.dart';
-import 'package:saloon_appointment_booking_system/screens/profile/profile/user_profile_screen.dart';
+import 'package:saloon_appointment_booking_system/screens/stylist/today/today_appointments_screen.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
 import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
@@ -20,12 +20,12 @@ class TodayAppointmentsStatCard extends StatelessWidget {
 
     return Material(
       color: isDarkMode ? Colors.grey[850] : Colors.white,
-      elevation: 4,
+      elevation: 0.5,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () {
-          Get.to(() => const UserProfileScreen());
+          Get.to(() => const TodayAppointmentsScreen());
         },
         child: Container(
           width: double.infinity,
@@ -33,16 +33,6 @@ class TodayAppointmentsStatCard extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: isDarkMode
-                    ? Colors.black.withOpacity(0.2)
-                    : Colors.grey.withOpacity(0.1),
-                spreadRadius: 0,
-                blurRadius: 20,
-                offset: const Offset(0, 4),
-              ),
-            ],
             border: Border.all(
               color: isDarkMode
                   ? Colors.grey[700]!
@@ -81,7 +71,7 @@ class TodayAppointmentsStatCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Obx(() {
                       final count =
-                          stylistController.upcomingAppointmentsCount.value;
+                          stylistController.todaysAppointmentsCount.value;
                       return Text(
                         '$count',
                         style: Theme.of(context)
@@ -89,7 +79,6 @@ class TodayAppointmentsStatCard extends StatelessWidget {
                             .headlineLarge
                             ?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: SBColors.primary,
                           letterSpacing: 1.5,
                         ),
                       );

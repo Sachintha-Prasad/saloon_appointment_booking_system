@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
+import 'package:saloon_appointment_booking_system/common/widgets/custom_bottom_sheet.dart';
 import 'package:saloon_appointment_booking_system/common/widgets/custom_text_button.dart';
 import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/controllers/stylist_controller.dart';
 import 'package:saloon_appointment_booking_system/screens/stylist/widgets/appointment_request_stat_card.dart';
-import 'package:saloon_appointment_booking_system/screens/stylist/widgets/request_leave_container.dart';
+import 'package:saloon_appointment_booking_system/screens/stylist/widgets/leave_request_bottom_sheet_content.dart';
 import 'package:saloon_appointment_booking_system/screens/stylist/widgets/stylist_dashboard_header.dart';
 import 'package:saloon_appointment_booking_system/screens/stylist/widgets/today_appointment_stat_card.dart';
 import 'package:saloon_appointment_booking_system/screens/stylist/widgets/upcoming_appointments_stat_card.dart';
-import 'package:saloon_appointment_booking_system/utils/constants/enum.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
 
 class StylistDashboard extends StatelessWidget {
@@ -55,10 +55,10 @@ class StylistDashboard extends StatelessWidget {
 
                   CustomTextButton(
                     btnText: "Request Leave",
-                    btnType: ButtonType.primary,
-                    onPressed: () async {
-                      RequestLeaveContainer.show(
-                        stylistController: stylistController,
+                    prefixIcon: const Icon(Icons.flight_takeoff),
+                    onPressed: () {
+                      CustomBottomSheet.show(
+                        child: LeaveRequestBottomSheetContent(),
                       );
                     },
                   ),
