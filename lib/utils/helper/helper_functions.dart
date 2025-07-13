@@ -58,6 +58,12 @@ class SBHelperFunctions {
       "Info",
       message,
       snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: SBColors.darkGrey.withOpacity(0.5),
+      colorText: SBColors.white,
+      borderRadius: 12,
+      margin: const EdgeInsets.all(16),
+      icon: const Icon(Icons.info, color: SBColors.white),
+      duration: const Duration(seconds: 3),
     );
     return null;
   }
@@ -65,11 +71,15 @@ class SBHelperFunctions {
   // show success snackbar
   static Future<void>? showSuccessSnackbar(String message) {
     Get.snackbar(
-      "Success",
+      'Success',
       message,
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: SBColors.successColor.withOpacity(0.1),
-      colorText: SBColors.successColor,
+      backgroundColor: SBColors.darkGrey.withOpacity(0.5),
+      colorText: SBColors.white,
+      borderRadius: 12,
+      margin: const EdgeInsets.all(16),
+      icon: const Icon(Icons.check_circle, color: SBColors.successColor),
+      duration: const Duration(seconds: 3),
     );
     return null;
   }
@@ -80,8 +90,12 @@ class SBHelperFunctions {
       "Error",
       message,
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: SBColors.errorColor.withOpacity(0.1),
-      colorText: SBColors.errorColor,
+      backgroundColor: SBColors.darkGrey.withOpacity(0.5),
+      colorText: SBColors.white,
+      borderRadius: 12,
+      margin: const EdgeInsets.all(16),
+      icon: const Icon(Icons.error, color: SBColors.red),
+      duration: const Duration(seconds: 3),
     );
     return null;
   }

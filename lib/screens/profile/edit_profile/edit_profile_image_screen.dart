@@ -110,28 +110,62 @@ class EditProfilePictureScreen extends StatelessWidget {
 
   void _showImagePickerOptions(ProfilePictureController controller) {
     CustomBottomSheet.show(
-      child: Wrap(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header Section
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Update Profile Picture',
+                  style: Theme.of(Get.context!).textTheme.titleLarge,
+                ),
+                const SizedBox(height: SBSizes.xs),
+                Text(
+                  'Choose how you want to add your photo.',
+                  style: Theme.of(Get.context!).textTheme.bodyMedium?.copyWith(
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: SBSizes.lg),
+
+          // Gallery Option
           ListTile(
-            leading: const Icon(Icons.image),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            leading: const Icon(Icons.image, color: Colors.blue),
             title: const Text("Choose from Gallery"),
             onTap: () {
               controller.pickImage(ImageSource.gallery);
-              Get.back();
+              CustomBottomSheet.close();
             },
           ),
+          const SizedBox(height: SBSizes.sm),
+
+          // Camera Option
           ListTile(
-            leading: const Icon(Icons.camera_alt),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            leading: const Icon(Icons.camera_alt, color: Colors.orange),
             title: const Text("Take a Picture"),
             onTap: () {
               controller.pickImage(ImageSource.camera);
-              Get.back();
+              CustomBottomSheet.close();
             },
           ),
+          const SizedBox(height: SBSizes.sm),
+
+          // Cancel Option
           ListTile(
-            leading: const Icon(Icons.close),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            leading: const Icon(Icons.close, color: Colors.redAccent),
             title: const Text("Cancel"),
-            onTap: () => Get.back(),
+            onTap: () => CustomBottomSheet.close(),
           ),
         ],
       ),
