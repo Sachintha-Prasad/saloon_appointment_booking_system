@@ -13,7 +13,7 @@ class StylistController extends GetxController {
   final RxList<dynamic> upcomingAppointments = <dynamic>[].obs;
   final RxList<dynamic> appointmentRequests = <dynamic>[].obs;
   final RxList<dynamic> todaysAppointments = <dynamic>[].obs;
-  final RxList<dynamic> leaves = <dynamic>[].obs;
+  final leaves = RxList<Map<String, dynamic>>([]);
 
   final RxBool isLeaveToday = false.obs;
   final RxInt upcomingAppointmentsCount = 0.obs;
@@ -112,8 +112,8 @@ class StylistController extends GetxController {
     }
   }
 
-  // Apply stylist leave
-  Future<void> applyStylistLeave({
+  // Request stylist leave
+  Future<void> requestStylistLeave({
     required String stylistId,
     required String date,
   }) async {
@@ -155,8 +155,15 @@ class StylistController extends GetxController {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final list = data['leaves'] ?? [];
-        leaves.assignAll(list);
+
+        final List<dynamic> leaveDates = data['leaveDates'] ?? [];
+
+        // Map strings to Map<String, dynamic> with key 'date' to keep your code consistent
+        final formattedLeaves = leaveDates.map<Map<String, dynamic>>(
+                (dateStr) => {'date': dateStr.toString()}
+        ).toList();
+
+        leaves.assignAll(formattedLeaves);
       } else {
         final error = jsonDecode(response.body);
         SBCustomErrorHandler.handleErrorResponse(error, "Failed to fetch leaves");
