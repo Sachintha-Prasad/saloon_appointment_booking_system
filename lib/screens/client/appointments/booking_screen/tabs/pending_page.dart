@@ -5,10 +5,10 @@ import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.d
 import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/controllers/user_controller.dart';
 import 'package:saloon_appointment_booking_system/data/time_slots/time_slots_data.dart';
+import 'package:saloon_appointment_booking_system/screens/client/home/widgets/status_chip.dart';
 import 'package:saloon_appointment_booking_system/services/api_service.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/error_handlers/custom_error_handler.dart';
-// import 'package:saloon_appointment_booking_system/utils/helpers/time_slots_data.dart';
 import 'package:intl/intl.dart';
 
 class AppointmentPendingTab extends StatefulWidget {
@@ -111,11 +111,12 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
         DateTime.tryParse(appointment['date'] ?? '') ?? DateTime.now();
     final String formattedDate = DateFormat('MMM dd, yyyy').format(parsedDate);
     final String timeSlot = _formatTimeSlot(appointment);
+    final String status = appointment['status'] ?? 'Pending';
 
     return Padding(
       padding: const EdgeInsets.only(top: 12),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: isDarkMode ? Colors.grey[850] : Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -179,26 +180,10 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
                       ],
                     ),
                   ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color:
-                          _getStatusColor(appointment['status'] ?? 'Pending'),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      'Pending',
-                      style: TextStyle(
-                        color: SBColors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
+                  // Status chip
+                  _buildStatusChip(status, isDarkMode),
                 ],
               ),
-              const SizedBox(height: 20),
             ],
           ),
         ),
@@ -206,17 +191,24 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
     );
   }
 
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'approved':
-        return Colors.green;
-      case 'pending':
-        return const Color.fromARGB(255, 243, 162, 41);
-      case 'cancelled':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
+  Widget _buildStatusChip(String status, bool isDarkMode) {
+    // return GradientStatusChip(
+    //   status: status,
+    //   fontSize: 11,
+    //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+    //   borderRadius: 12,
+    //   showIcon: true,
+    //   iconSize: 12,
+    // );
+    return OutlinedStatusChip(
+      status: status,
+      fontSize: 11,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      borderRadius: 12,
+      showIcon: true,
+      iconSize: 12,
+      borderWidth: 1,
+    );
   }
 
   @override
@@ -226,10 +218,37 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
         : errorMessage != null
             ? Center(child: Text(errorMessage!))
             : pendingAppointments.isEmpty
-                ? const Center(child: Text("No pending appointments."))
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.calendar_today,
+                          size: 64,
+                          color: Colors.grey.withOpacity(0.6),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          "No pending appointments.",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.withOpacity(0.8),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 : RefreshIndicator(
                     onRefresh: fetchPendingAppointments,
+                    color: SBColors.primary, // Use your app's primary color
+                    backgroundColor:
+                        Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[850]
+                            : Colors.white,
+                    strokeWidth: 2.5,
+                    displacement: 40.0,
                     child: ListView.builder(
+                      padding: const EdgeInsets.only(top: 16, bottom: 16),
                       itemCount: pendingAppointments.length,
                       itemBuilder: (context, index) =>
                           buildAppointmentCard(pendingAppointments[index]),
