@@ -39,6 +39,9 @@ class SBColors {
   // success colors
   static const Color successColor = Color(0xFF089d37);
 
+  // warning colors
+  static const Color warningColor = Color(0xFFFFC107);
+
   // error colors
   static const Color errorColor = Color(0xFFB00020);
 

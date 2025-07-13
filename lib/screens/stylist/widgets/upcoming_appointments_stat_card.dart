@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saloon_appointment_booking_system/controllers/stylist_controller.dart';
+import 'package:saloon_appointment_booking_system/screens/stylist/upcoming/upcoming_appointments_screen.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/sizes.dart';
 import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
@@ -19,12 +20,12 @@ class UpcomingAppointmentsStatCard extends StatelessWidget {
 
     return Material(
       color: isDarkMode ? Colors.grey[850] : Colors.white,
-      elevation: 4,
+      elevation: 0.5,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () {
-          // Handle card tap (optional)
+          Get.to(() => UpcomingAppointmentsScreen());
         },
         child: Container(
           width: double.infinity,
@@ -53,14 +54,14 @@ class UpcomingAppointmentsStatCard extends StatelessWidget {
             children: [
               Container(
                 decoration: BoxDecoration(
-                  color: SBColors.primary.withOpacity(0.15),
+                  color: SBColors.successColor.withOpacity(0.15),
                   shape: BoxShape.circle,
                 ),
                 padding: const EdgeInsets.all(12),
                 child: Icon(
                   Icons.schedule,
                   size: 32,
-                  color: SBColors.primary,
+                  color: SBColors.successColor,
                 ),
               ),
               const SizedBox(height: SBSizes.sm),
@@ -88,7 +89,6 @@ class UpcomingAppointmentsStatCard extends StatelessWidget {
                             .headlineLarge
                             ?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: SBColors.primary,
                           letterSpacing: 1.5,
                         ),
                       );
