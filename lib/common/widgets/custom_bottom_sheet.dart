@@ -21,7 +21,8 @@ class CustomBottomSheet extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDarkMode
             ? const Color(0xFF1E1E1E)
-            : SBColors.darkModeInactiveSlotBgColor,
+            : SBColors
+                .darkModeInactiveSlotBgColor, // Consistent with your reference
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: const EdgeInsets.all(24),
@@ -35,7 +36,9 @@ class CustomBottomSheet extends StatelessWidget {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey[600],
+                color: isDarkMode
+                    ? Colors.grey[600]
+                    : Colors.grey[400], // Lighter handle bar for light mode
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
