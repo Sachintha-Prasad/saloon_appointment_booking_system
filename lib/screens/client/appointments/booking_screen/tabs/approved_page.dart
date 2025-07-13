@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
 import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/controllers/user_controller.dart';
 import 'package:saloon_appointment_booking_system/data/time_slots/time_slots_data.dart';
@@ -10,6 +9,7 @@ import 'package:saloon_appointment_booking_system/services/api_service.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/error_handlers/custom_error_handler.dart';
 import 'package:intl/intl.dart';
+import 'package:saloon_appointment_booking_system/screens/client/appointments/booking_screen/widgets/empty_state.dart';
 
 class AppointmentApprovedTab extends StatefulWidget {
   const AppointmentApprovedTab({super.key});
@@ -99,11 +99,47 @@ class _AppointmentApprovedTabState extends State<AppointmentApprovedTab> {
   Widget buildAppointmentCard(Map<String, dynamic> appointment) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    final stylist = Get.find<UserController>()
-        .stylistList
-        .firstWhereOrNull((s) => s.id == appointment['stylistId']);
-    final stylistName = stylist != null
-        ? ' ${stylist.name.split(' ').map((w) => w.isNotEmpty ? w[0].toUpperCase() + w.substring(1).toLowerCase() : '').join(' ')}'
+    // Handle stylistId - it's now an object in the API response
+    String stylistName = 'Unknown';
+
+    if (appointment['stylistId'] is Map<String, dynamic>) {
+      // stylistId is an object (populated)
+      final stylistObj = appointment['stylistId'] as Map<String, dynamic>;
+      final name = stylistObj['name']?.toString();
+      if (name != null && name.isNotEmpty) {
+        stylistName = name
+            .split(' ')
+            .map((w) => w.isNotEmpty
+                ? w[0].toUpperCase() + w.substring(1).toLowerCase()
+                : '')
+            .join(' ');
+      }
+    } else {
+      // Fallback: stylistId is a string (not populated) - try to find in stylist list
+      final stylistIdString = appointment['stylistId']?.toString();
+      if (stylistIdString != null) {
+        final stylist = Get.find<UserController>()
+            .stylistList
+            .firstWhereOrNull((s) => s.id == stylistIdString);
+        if (stylist != null) {
+          stylistName = stylist.name
+              .split(' ')
+              .map((w) => w.isNotEmpty
+                  ? w[0].toUpperCase() + w.substring(1).toLowerCase()
+                  : '')
+              .join(' ');
+        }
+      }
+    }
+
+    // Format the stylist name
+    final formattedStylistName = stylistName != null
+        ? stylistName
+            .split(' ')
+            .map((w) => w.isNotEmpty
+                ? w[0].toUpperCase() + w.substring(1).toLowerCase()
+                : '')
+            .join(' ')
         : 'Unknown';
 
     final DateTime parsedDate =
@@ -169,7 +205,7 @@ class _AppointmentApprovedTabState extends State<AppointmentApprovedTab> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Stylist: $stylistName',
+                          'Stylist: $formattedStylistName',
                           style: TextStyle(
                             fontSize: 14,
                             color: isDarkMode ? Colors.white70 : Colors.black54,
@@ -179,6 +215,7 @@ class _AppointmentApprovedTabState extends State<AppointmentApprovedTab> {
                       ],
                     ),
                   ),
+                  // Status chip
                   _buildStatusChip(status),
                 ],
               ),
@@ -209,6 +246,8 @@ class _AppointmentApprovedTabState extends State<AppointmentApprovedTab> {
     );
   }
 
+  // Replace your existing build method with this updated version:
+
   @override
   Widget build(BuildContext context) {
     return isLoading
@@ -216,29 +255,17 @@ class _AppointmentApprovedTabState extends State<AppointmentApprovedTab> {
         : errorMessage != null
             ? Center(child: Text(errorMessage!))
             : approvedAppointments.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          size: 64,
-                          color: Colors.grey.withOpacity(0.6),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          "No approved appointments.",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.withOpacity(0.8),
-                          ),
-                        ),
-                      ],
-                    ),
+                ? EmptyState(
+                    title: "No Approved Appointments",
+                    subtitle:
+                        "Your approved appointments will appear here once confirmed by the salon",
+                    onRefresh: fetchApprovedAppointments,
+                    icon: Icons.event_available_rounded,
+                    buttonText: "Refresh",
                   )
                 : RefreshIndicator(
                     onRefresh: fetchApprovedAppointments,
-                    color: SBColors.primary, // Use your app's primary color
+                    color: SBColors.primary,
                     backgroundColor:
                         Theme.of(context).brightness == Brightness.dark
                             ? Colors.grey[850]

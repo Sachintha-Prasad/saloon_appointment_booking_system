@@ -1,15 +1,18 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:saloon_appointment_booking_system/common/styles/spacing_styles.dart';
 import 'package:saloon_appointment_booking_system/controllers/auth_controller.dart';
 import 'package:saloon_appointment_booking_system/controllers/user_controller.dart';
 import 'package:saloon_appointment_booking_system/data/time_slots/time_slots_data.dart';
 import 'package:saloon_appointment_booking_system/screens/client/home/widgets/status_chip.dart';
+import 'package:saloon_appointment_booking_system/screens/client/appointments/booking_screen/widgets/empty_state.dart';
 import 'package:saloon_appointment_booking_system/services/api_service.dart';
 import 'package:saloon_appointment_booking_system/utils/constants/colors.dart';
 import 'package:saloon_appointment_booking_system/utils/error_handlers/custom_error_handler.dart';
 import 'package:intl/intl.dart';
+import 'package:saloon_appointment_booking_system/utils/helper/helper_functions.dart';
 
 class AppointmentPendingTab extends StatefulWidget {
   const AppointmentPendingTab({super.key});
@@ -70,6 +73,60 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
     }
   }
 
+  Future<void> _cancelAppointment(String appointmentId) async {
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Cancel Appointment'),
+        content:
+            const Text('Are you sure you want to cancel this appointment?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final response = await apiService.authenticatedPut(
+        'appointments/$appointmentId/cancel',
+        {},
+      );
+
+      if (response.statusCode == 200) {
+        await fetchPendingAppointments();
+        SBHelperFunctions.showDarkSnackbar(
+          'Appointment Cancelled',
+        );
+      } else {
+        final error = jsonDecode(response.body);
+        SBCustomErrorHandler.handleErrorResponse(error, "Failed to cancel");
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to cancel appointment: $e',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   String _getTimeRangeFromSlotNumber(int? slotNumber) {
     if (slotNumber == null) return 'Unknown';
 
@@ -99,12 +156,33 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
 
   Widget buildAppointmentCard(Map<String, dynamic> appointment) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final appointmentId = appointment['_id'] as String;
 
-    final stylist = Get.find<UserController>()
-        .stylistList
-        .firstWhereOrNull((s) => s.id == appointment['stylistId']);
-    final stylistName = stylist != null
-        ? ' ${stylist.name.split(' ').map((w) => w.isNotEmpty ? w[0].toUpperCase() + w.substring(1).toLowerCase() : '').join(' ')}'
+    String? stylistName;
+    String? stylistIdString;
+
+    if (appointment['stylistId'] is Map<String, dynamic>) {
+      final stylistObj = appointment['stylistId'] as Map<String, dynamic>;
+      stylistName = stylistObj['name']?.toString();
+      stylistIdString = stylistObj['_id']?.toString();
+    } else {
+      stylistIdString = appointment['stylistId']?.toString();
+    }
+
+    if (stylistName == null && stylistIdString != null) {
+      final stylist = Get.find<UserController>()
+          .stylistList
+          .firstWhereOrNull((s) => s.id == stylistIdString);
+      stylistName = stylist?.name;
+    }
+
+    final formattedStylistName = stylistName != null
+        ? stylistName
+            .split(' ')
+            .map((w) => w.isNotEmpty
+                ? w[0].toUpperCase() + w.substring(1).toLowerCase()
+                : '')
+            .join(' ')
         : 'Unknown';
 
     final DateTime parsedDate =
@@ -137,54 +215,81 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
             width: 1,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          formattedDate,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: isDarkMode
-                                ? Colors.white
-                                : const Color(0xFF2C3E50),
-                          ),
+        child: IntrinsicHeight(
+          child: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        formattedDate,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: isDarkMode
+                              ? Colors.white
+                              : const Color(0xFF2C3E50),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          timeSlot,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: SBColors.primary,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        timeSlot,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: SBColors.primary,
+                          fontWeight: FontWeight.w500,
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Stylist: $stylistName',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: isDarkMode ? Colors.white70 : Colors.black54,
-                            fontWeight: FontWeight.w500,
-                          ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Stylist: $formattedStylistName',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: isDarkMode ? Colors.white70 : Colors.black54,
+                          fontWeight: FontWeight.w500,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  // Status chip
-                  _buildStatusChip(status, isDarkMode),
-                ],
-              ),
-            ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    _buildStatusChip(status, isDarkMode),
+                    // --- MODIFIED: Cancel button is now a standard ElevatedButton ---
+                    SizedBox(
+                      height: 24,
+                      child: TextButton(
+                        onPressed: () => _cancelAppointment(appointmentId),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          // backgroundColor: Colors.redAccent.withOpacity(0.9),
+                          foregroundColor: Colors.red,
+                          // shape: RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.circular(20),
+                          // ),
+                          elevation: 2,
+                        ),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -192,14 +297,6 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
   }
 
   Widget _buildStatusChip(String status, bool isDarkMode) {
-    // return GradientStatusChip(
-    //   status: status,
-    //   fontSize: 11,
-    //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-    //   borderRadius: 12,
-    //   showIcon: true,
-    //   iconSize: 12,
-    // );
     return OutlinedStatusChip(
       status: status,
       fontSize: 11,
@@ -218,29 +315,16 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
         : errorMessage != null
             ? Center(child: Text(errorMessage!))
             : pendingAppointments.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          size: 64,
-                          color: Colors.grey.withOpacity(0.6),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          "No pending appointments.",
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey.withOpacity(0.8),
-                          ),
-                        ),
-                      ],
-                    ),
+                ? EmptyState(
+                    title: "No Pending Appointments",
+                    subtitle: "",
+                    onRefresh: fetchPendingAppointments,
+                    icon: Icons.access_time_rounded,
+                    buttonText: "Refresh",
                   )
                 : RefreshIndicator(
                     onRefresh: fetchPendingAppointments,
-                    color: SBColors.primary, // Use your app's primary color
+                    color: SBColors.primary,
                     backgroundColor:
                         Theme.of(context).brightness == Brightness.dark
                             ? Colors.grey[850]
