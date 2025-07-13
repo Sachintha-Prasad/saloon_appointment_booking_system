@@ -81,11 +81,21 @@ class _AppointmentPendingTabState extends State<AppointmentPendingTab> {
         content:
             const Text('Are you sure you want to cancel this appointment?'),
         actions: [
+          // “No” button – just change the text (foreground) colour.
           TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.grey, // text/icon colour
+            ),
             onPressed: () => Navigator.of(context).pop(false),
             child: const Text('No'),
           ),
-          TextButton(
+
+          // “Yes” button – filled background + white text.
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: SBColors.errorColor, // button fill
+              foregroundColor: Colors.white, // text/icon colour
+            ),
             onPressed: () => Navigator.of(context).pop(true),
             child: const Text('Yes'),
           ),
